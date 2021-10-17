@@ -1,0 +1,309 @@
+# shellcheck shell=bash
+# === === === SHELL PROFILE === === === #
+
+# === VARIABLES === #
+INTERPRETER=$(ps -c -o command= -p$$ | tr -d "-")
+declare INTERPRETER_VERSION
+declare NEWLINE
+# The following declarations are colours. Will be used in other files
+# shellcheck disable=SC2034
+B=$(tput setaf 0) # BLACK
+# shellcheck disable=SC2034
+BB=$(tput setaf 8) # BOLD BLACK
+# shellcheck disable=SC2034
+R=$(tput setaf 1) # RED
+# shellcheck disable=SC2034
+RB=$(tput setaf 9) # BOLD RED
+# shellcheck disable=SC2034
+G=$(tput setaf 2) # GREEN
+# shellcheck disable=SC2034
+GB=$(tput setaf 10) # BOLD GREEN
+# shellcheck disable=SC2034
+Y=$(tput setaf 3) # YELLOW
+# shellcheck disable=SC2034
+YB=$(tput setaf 11) # BOLD YELLOW
+# shellcheck disable=SC2034
+A=$(tput setaf 4) # BLUE
+# shellcheck disable=SC2034
+AB=$(tput setaf 12) # BOLD BLUE
+# shellcheck disable=SC2034
+M=$(tput setaf 5) # MAGENTA
+# shellcheck disable=SC2034
+MB=$(tput setaf 13) # BOLD MAGENTA
+# shellcheck disable=SC2034
+C=$(tput setaf 6) # CYAN
+# shellcheck disable=SC2034
+CB=$(tput setaf 14) # BOLD CYAN
+# shellcheck disable=SC2034
+W=$(tput setaf 7) # WHITE
+# shellcheck disable=SC2034
+WB=$(tput setaf 15) # BOLD WHITE
+# shellcheck disable=SC2034
+RESET=$(tput sgr0) # RESET
+
+case "${INTERPRETER}" in
+"bash")
+	INTERPRETER_VERSION=$BASH_VERSION
+	NEWLINE='\n'
+	;;
+"zsh")
+	INTERPRETER_VERSION=$ZSH_VERSION
+	NEWLINE=$'\n'
+	;;
+esac
+
+# === CONFIGURATION === #
+# OPTIONS
+case "${INTERPRETER}" in
+"bash") ;;
+"zsh")
+	setopt AUTO_CD       # Perform 'cd' if argument in stdin is a directory instead of a command
+	setopt NO_CASE_GLOB  # Autocompletion will be case insensitive
+	setopt GLOB_COMPLETE # Create a cyclable menu with all autocomplete matches
+	setopt PROMPT_SUBST  # Enable prompt function execution capabilities
+	# Shellcheck doesn't support linting over ZSH instructions
+	# https://github.com/koalaman/shellcheck/issues/809
+	# shellcheck disable=SC2034
+	ZLE_SPACE_SUFFIX_CHARS=$'|&'
+	;;
+esac
+# PROMPT
+case "${INTERPRETER}" in
+"bash")
+	export PS1='\[$W\][\D{%a %d.%m.%Y} - \t] ~ \[$Y\]\!\[$W\] ~ \[$RB\]#\#\n\[$WB\]··> $(amibox-prompt)\[$WB\]\h$(amibox-prompt)\[$WB\] { \j } <·· \[$W\][\[$CB\]\u\[$W\]] \[$MB\]\W\[$RESET\] \[$B\]$(gitbranch)\[$RESET\]\$ '
+	export PS2='\[$R\]··>\[$RESET\] '
+	export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
+	;;
+"zsh")
+	export PS1='%F{7}[%D{%a %d.%m.%Y - %H:%M:%S}]$NEWLINE%F{15}··> $(amibox-prompt)%F{15}%m$(amibox-prompt)%F{15} { %j } <·· %F{7}[%F{14}%n%F{7}] %F{13}%1~%f %F{0}$(gitbranch)%f%# '
+	export RPS1='%F{3}%!%F{7} ~ %(?.%F{10}√%f.%F{9}%?%f)'
+	export PS2='%F{1}··>%f '
+	export RPS2='%F{1}<··%f'
+	;;
+esac
+# STDOUT
+export CLICOLOR=1
+export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
+# LOCALE
+export LANG="en_GB.UTF-8"
+if amibox; then
+	export LC_ALL="en_GB.UTF-8"
+else 
+	export LC_ADDRESS="es_ES.UTF-8"
+	export LC_COLLATE="en_GB.UTF-8"
+	export LC_CTYPE="es_ES.UTF-8"
+	export LC_MONETARY="es_ES.UTF-8"
+	export LC_MEASUREMENT="es_ES.UTF-8"
+	export LC_MESSAGES="en_GB.UTF-8"
+	export LC_NUMERIC="en_GB.UTF-8"
+	export LC_PAPER="es_ES.UTF-8"
+	export LC_RESPONSE="en_GB.UTF-8"
+	export LC_TELEPHONE="es_ES.UTF-8"
+	export LC_TIME="es_ES.UTF-8"
+fi
+# HISTORY
+export HISTSIZE=333    # Number of commands in history
+export SAVEHIST=999999 # Number of lines in file
+case "${INTERPRETER}" in
+"bash")
+	export HISTCONTROL='ignoreboth' # Ignores repeated command & commands starting with a space
+	;;
+"zsh")
+	setopt INC_APPEND_HISTORY # Write to the history file immediately, not when the shell exits
+	setopt HIST_IGNORE_SPACE  # Don't record an entry starting with a space
+	setopt HIST_IGNORE_DUPS   # Don't record an entry that was just recorded again
+	setopt HIST_SAVE_NO_DUPS  # Don't write duplicate entries in the history file
+	;;
+esac
+# EDITOR
+export EDITOR=nano
+# LESS
+export LESSHISTFILE="-"
+# APPS
+export APPS_ROOT="$HOME/.apps"
+# SCRIPTS
+export SCRIPT_ROOT="$HOME/.scripts"
+# COMPLETIONS
+export COMPLETIONS_DIR="$HOME/.completions"
+# NVM
+export NVM_DIR="$HOME/.nvm"
+# PYENV
+export PYENV_ROOT="$HOME/.pyenv"
+# PATH
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$PATH:$APPS_ROOT"
+export PATH="$PATH:$SCRIPT_ROOT"
+export PATH="$PATH:$NVM_DIR"
+export PATH="$PATH:$PYENV_ROOT"
+
+# === WELCOME === #
+echo -e "\n $CB ··> Hi $USER! Welcome to $INTERPRETER $INTERPRETER_VERSION <·· $RESET\n"
+
+# === LOAD FILES === #
+echo -e "$CB Loading completion: $RESET"
+case "${INTERPRETER}" in
+"bash")
+	# LOAD BASH COMPLETION
+	BASH_COMPLETION="/usr/local/share/bash-completion/bash_completion"
+	if [ -f "$BASH_COMPLETION" ]; then
+		echo -e "$CB   ··>$MB bash $RESET"
+		# This file may change location depending on OS
+		# shellcheck disable=SC1090
+		. "$BASH_COMPLETION"
+	fi
+	# LOAD GIT COMPLETION
+	GIT_COMPLETION="$COMPLETIONS_DIR/git-completion.bash"
+	if [ -f "$GIT_COMPLETION" ]; then
+		echo -e "$CB   ··>$MB git $RESET"
+		# This file may change location depending on OS
+		# shellcheck disable=SC1090
+		. "$GIT_COMPLETION"
+	fi
+	# LOAD DOCKER COMPLETION
+	DOCKER_COMPLETION="$COMPLETIONS_DIR/docker.bash"
+	if [ -f "$DOCKER_COMPLETION" ]; then
+		echo -e "$CB   ··>$MB docker $RESET"
+		# This file may change location depending on OS
+		# shellcheck disable=SC1090
+		. "$DOCKER_COMPLETION"
+	fi
+	# LOAD DOCKER COMPOSE COMPLETION
+	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_DIR/docker-compose.bash"
+	if [ -f "$DOCKER_COMPOSE_COMPLETION" ]; then
+		echo -e "$CB   ··>$MB docker-compose $RESET"
+		# This file may change location depending on OS
+		# shellcheck disable=SC1090
+		. "$DOCKER_COMPOSE_COMPLETION"
+	fi
+	;;
+"zsh")
+	autoload bashcompinit && bashcompinit
+	# LOAD ZSH COMPLETION
+	echo -e "$CB   ··>$MB zsh $RESET"
+	zstyle ':completion:*' completer _expand _complete _ignored _approximate
+	# Shellcheck doesn't support linting over ZSH instructions
+	# https://github.com/koalaman/shellcheck/issues/809
+	# shellcheck disable=SC2086
+	zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+	zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*'
+	zstyle ':completion:*' list-suffixes
+	zstyle ':completion:*' expand prefix suffix
+	zstyle ':completion:*' menu select=1
+	# Shellcheck doesn't support linting over ZSH instructions
+	# https://github.com/koalaman/shellcheck/issues/809
+	# shellcheck disable=SC1083
+	zstyle ':completion:*' select-prompt %SCompletion Scrolling { %l }:%s
+	# LOAD GIT COMPLETION
+	GIT_COMPLETION_ZSH="$COMPLETIONS_DIR/git-completion.zsh"
+	GIT_COMPLETION_BASH="$COMPLETIONS_DIR/git-completion.bash"
+	if [ -f "$GIT_COMPLETION_ZSH" ] && [ -f "$GIT_COMPLETION_BASH" ]; then
+		echo -e "$CB   ··>$MB git $RESET"
+		zstyle ':completion:*:*:git:*' script "$GIT_COMPLETION_BASH"
+		# Shellcheck doesn't support linting over ZSH instructions
+		# https://github.com/koalaman/shellcheck/issues/809
+		# shellcheck disable=SC2206
+		fpath=("$GIT_COMPLETION_ZSH" $fpath)
+	fi
+	# LOAD DOCKER COMPLETION
+	DOCKER_COMPLETION="$COMPLETIONS_DIR/docker.zsh"
+	if [ -f "$DOCKER_COMPLETION" ]; then
+		echo -e "$CB   ··>$MB docker $RESET"
+		# Shellcheck doesn't support linting over ZSH instructions
+		# https://github.com/koalaman/shellcheck/issues/809
+		# shellcheck disable=SC2128,SC2206
+		fpath=("$DOCKER_COMPLETION" $fpath)
+	fi
+	# LOAD DOCKER COMPOSE COMPLETION
+	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_DIR/docker-compose.zsh"
+	if [ -f "$DOCKER_COMPOSE_COMPLETION" ]; then
+		echo -e "$CB   ··>$MB docker-compose $RESET"
+		# Shellcheck doesn't support linting over ZSH instructions
+		# https://github.com/koalaman/shellcheck/issues/809
+		# shellcheck disable=SC2128,SC2206
+		fpath=("$DOCKER_COMPOSE_COMPLETION" $fpath)
+	fi
+	autoload -Uz compinit && compinit
+	;;
+esac
+
+# LOAD BREW COMPLETION
+BREW_COMPLETION="/usr/local/etc/bash_completion.d/brew"
+if [ -f "$BREW_COMPLETION" ]; then
+	echo -e "$CB   ··>$MB brew $RESET"
+	# This file may change location depending on OS
+	# shellcheck disable=SC1090
+	. "$BREW_COMPLETION"
+fi
+
+# LOAD BREW SERVICES COMPLETION
+BREW_SERVICES_COMPLETION="/usr/local/etc/bash_completion.d/brew-services"
+if [ -f "$BREW_SERVICES_COMPLETION" ]; then
+	echo -e "$CB   ··>$MB brew-services $RESET"
+	# This file may change location depending on OS
+	# shellcheck disable=SC1090
+	. "$BREW_SERVICES_COMPLETION"
+fi
+
+# LOAD NVM COMPLETION
+NVM_COMPLETION="/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+if [ -f "$NVM_COMPLETION" ]; then
+	echo -e "$CB   ··>$MB nvm $RESET"
+	# This file may change location depending on OS
+	# shellcheck disable=SC1090
+	. "$NVM_COMPLETION"
+fi
+
+echo -e "$NEWLINE"
+echo -e "$CB Loading scripts: $RESET"
+
+# LOAD FILES
+SHELL_ALIASES="$HOME/.shell_aliases"
+if [ -f "$SHELL_ALIASES" ]; then
+	echo -e "$CB   ··>$MB aliases $RESET"
+	# shellcheck source=./aliases.shell
+	. "$SHELL_ALIASES"
+fi
+
+SHELL_FUNCTIONS="$HOME/.shell_functions"
+if [ -f "$SHELL_FUNCTIONS" ]; then
+	echo -e "$CB   ··>$MB functions $RESET"
+	# shellcheck source=./functions.shell
+	. "$SHELL_FUNCTIONS"
+fi
+
+SHELL_BOX="$HOME/.shell_box"
+if [ -f "$SHELL_BOX" ]; then
+	echo -e "$CB   ··>$MB box $RESET"
+	# This file may not exists
+	# shellcheck disable=SC1090
+	. "$SHELL_BOX"
+fi
+
+SHELL_JOB="$HOME/.shell_job"
+if [ -f "$SHELL_JOB" ]; then
+	echo -e "$CB   ··>$MB job $RESET"
+	# This file may not exists
+	# shellcheck disable=SC1090
+	. "$SHELL_JOB"
+fi
+
+# LOAD NVM
+if [ -f "/usr/local/opt/nvm/nvm.sh" ]; then
+	echo -e "$CB   ··>$MB nvm $RESET"
+	. "/usr/local/opt/nvm/nvm.sh"
+fi
+
+# LOAD PYENV
+if command -v pyenv 1> /dev/null 2>&1; then
+	echo -e "$CB   ··>$MB pyenv $RESET"
+	eval "$(pyenv init -)"
+fi
+
+echo -e "\n $CB ··> All tools were loaded, enjoy your shell <·· $RESET\n"
+
+# LOAD SHELL INIT
+SHELL_INIT="$HOME/.shell_init"
+if [ -f "$SHELL_INIT" ]; then
+	# shellcheck source=./init.shell
+	. "$SHELL_INIT"
+fi

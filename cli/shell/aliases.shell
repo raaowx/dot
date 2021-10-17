@@ -1,0 +1,39 @@
+# shellcheck shell=bash
+# === === === SHELL ALIASES === === === #
+# A
+# B
+alias bat='bat -P'
+# C
+alias cleanup-brew='brew cleanup --prune=all -s'
+alias cleanup-hosts='echo -n > "$HOME/.ssh/known_hosts"'
+# D
+# E
+# F
+# G
+alias grep='grep --color=auto'
+# H
+# I
+# J
+# K
+# L
+## Alias 'll' description
+#     a = All files including hidden
+#     h = Human readeable file/folder size
+#     l = Long list format
+#     p = Write '/' at the end of folders name
+alias ll='ls -ahlp'
+# M
+# N
+alias neofetch='neofetch --config "$HOME/.neofetch"'
+# O
+# P
+# Q
+# R
+# S
+# T
+# U
+# V
+# W
+# X
+# Y
+# Z

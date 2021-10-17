@@ -1,0 +1,169 @@
+# shellcheck shell=bash
+# === === === SHELL FUNCTIONS === === === #
+# A
+add-space-to-dock() {
+  defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+  killall Dock
+  sleep 3
+  open -a Dock
+}
+amibox() {
+  hostname | grep -Eq '(B|b)(O|o)(X|x)'
+}
+amibox-prompt() {
+  if amibox; then
+    echo -e "$RB·$RESET"
+  fi
+}
+# B
+# C
+cleanup-history() {
+  case "${INTERPRETER}" in
+  "bash")
+    echo -n > "$HOME/.bash_history"
+    history -c
+    ;;
+  "zsh")
+    echo -n > "$HOME/.zsh_history"
+    ;;
+  esac
+}
+# D
+dos2nix() {
+  FILE=$(basename "$1")
+  NAME="${FILE%.*}"
+  tr -d '\r' < "$1" > "$NAME.nix.txt"
+}
+# E
+# F
+# G
+gitbranch() {
+  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/{ \1 }\ /'
+}
+gitignore() {
+  PARAM="linux,macos,windows"
+  if [ $# -ne 0 ]; then
+    for name in "$@"; do
+      PARAM="$PARAM,$name"
+    done
+    echo -e "$WB Creating '$RB.gitignore$WB' with provided values:$YB $PARAM $RESET"
+  else
+    echo -e "$WB Creating '$RB.gitignore$WB' with default values:$YB $PARAM $RESET"
+  fi
+  curl --connect-timeout 10 -f -s -L "toptal.com/developers/gitignore/api/$PARAM" -o .gitignore
+}
+# H
+hosts() {
+  HOSTS="/etc/hosts"
+  if which bat &> /dev/null; then
+    bat $HOSTS
+  else
+    if which lolcat &> /dev/null; then
+      lolcat $HOSTS
+    else
+      cat $HOSTS
+    fi
+  fi
+}
+# I
+# J
+# K
+# L
+lanconfig() {
+  for ip in $(ifconfig | grep -Eo "(10|127)(\.[0-9]{1,3}){3}|172(\.[1-3]{1}[0-9]{1})(\.[0-9]{1,3}){2}|192\.168(\.[0-9]{1,3}){2}" ); do
+    echo -e "$WB LAN IP:$YB $ip $RESET"
+  done
+}
+# M
+# N
+netconfig() {
+  lanconfig
+  wanconfig
+}
+nix2dos() {
+  FILE=$(basename "$1")
+  NAME="${FILE%.*}"
+  sed 's/$'"/\\r/" "$1" > "$NAME.dos.txt"
+}
+# O
+# P
+# Q
+# R
+random-password() {
+  REGEX='^[0-9]+$'
+  OPTIONS=(8 16 32 64 128 256 512)
+  if [[ $# -eq 0 ]]; then
+    echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
+  elif [[ $# -eq 1 ]] && [[ $1 =~ $REGEX ]]; then
+    if [[ " ${OPTIONS[*]} " =~ ${1} ]]; then
+      echo -e "$WB ··> Random password with $1 bytes:$YB $(openssl rand "$1" | openssl base64 -a)$RESET"
+    else
+      echo -e "\n$RB [ERROR] Remember to pass one of the following positive integers as parameter: ${OPTIONS[*]} $RESET\n"
+      echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
+    fi
+  else
+    echo -e "\n$RB [ERROR] Remember to pass only one positive integer as parameter$RESET\n"
+    echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
+  fi
+}
+reload-shell() {
+  clear
+  case "${INTERPRETER}" in
+  "bash")
+    # shellcheck source=../bash/profile.bash
+    source "$HOME/.bash_profile"
+    ;;
+  "zsh")
+    # shellcheck source=../zsh/profile.zsh
+    source "$HOME/.zsh_profile"
+    ;;
+  esac
+}
+repoinfo() {
+  if git rev-parse --show-toplevel >/dev/null 2>&1; then
+    echo -e "$WB ··> Name:$YB $(basename "$(pwd)")$RESET"
+    echo -e "$WB ··> Branch:$YB $(gitbranch)$RESET"
+    echo -e "$WB ··> Current changes:$RESET"
+    git status -s
+    REGEX='^[0-9]+$'
+    if [[ $# -eq 0 ]]; then
+      echo -e "$WB ··> Last 5 commits:$RESET"
+      git log -n 5 --oneline
+    elif [[ $# -eq 1 ]] && [[ $1 =~ $REGEX ]] && [[ $1 -gt 0 ]]; then
+      echo -e "$WB ··> Last $1 commits:$RESET"
+      git log -n "$1" --oneline
+    else
+      echo -e "\n$RB [ERROR] Remember to pass only one positive integer as parameter$RESET\n"
+      echo -e "$WB ··> Last 5 commits:$RESET"
+      git log -n 5 --oneline
+    fi
+    echo
+  else
+    echo -e "$RB [ERROR] There's no repository here$RESET"
+  fi
+}
+# S
+# T
+# U
+update_terminal_cwd() {
+  # Workaround to solve command not found in the editors integrated terminals
+  # Identify the directory using a "file:" scheme URL,
+  # including the host name to disambiguate local vs.
+  # remote connections. Percent-escape spaces.
+  local SEARCH=' '
+  local REPLACE='%20'
+  local PWD_URL="file://$HOSTNAME${PWD//$SEARCH/$REPLACE}"
+  printf '\e]7;%s\a' "$PWD_URL"
+}
+# V
+# W
+wanconfig() {
+  echo -e "$WB WAN IP:$YB $(curl --connect-timeout 10 -f -s -L ident.me)$RESET"
+}
+weather() {
+  CITY="${*//\ /%20}"
+  curl --connect-timeout 10 -f -s -L "wttr.in/$CITY"
+}
+# X
+# Y
+# Z
