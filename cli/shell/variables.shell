@@ -1,0 +1,87 @@
+# shellcheck shell=bash
+# === === === SHELL VARIABLES === === === #
+# MAIN VARIABLES
+INTERPRETER=$(ps -c -o command= -p$$ | tr -d "-")
+declare INTERPRETER_VERSION
+declare NEWLINE
+case "${INTERPRETER}" in
+"bash")
+	export INTERPRETER_VERSION=$BASH_VERSION
+	export NEWLINE='\n'
+	;;
+"zsh")
+	export INTERPRETER_VERSION=$ZSH_VERSION
+	export NEWLINE=$'\n'
+	;;
+esac
+# LOCALE
+export LANG="en_GB.UTF-8"
+if hostname | grep -Eq '(B|b)(O|o)(X|x)'; then
+	export LC_ALL="en_GB.UTF-8"
+else 
+	export LC_ADDRESS="es_ES.UTF-8"
+	export LC_COLLATE="en_GB.UTF-8"
+	export LC_CTYPE="es_ES.UTF-8"
+	export LC_MONETARY="es_ES.UTF-8"
+	export LC_MEASUREMENT="es_ES.UTF-8"
+	export LC_MESSAGES="en_GB.UTF-8"
+	export LC_NUMERIC="en_GB.UTF-8"
+	export LC_PAPER="es_ES.UTF-8"
+	export LC_RESPONSE="en_GB.UTF-8"
+	export LC_TELEPHONE="es_ES.UTF-8"
+	export LC_TIME="es_ES.UTF-8"
+fi
+# DIRECTORIES
+export COMPLETIONS_ROOT="$HOME/.completions"
+export APPS_ROOT="$HOME/.apps"
+export SCRIPT_ROOT="$HOME/.scripts"
+export NVM_DIR="$HOME/.nvm"
+export PYENV_ROOT="$HOME/.pyenv"
+# PATH
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$PATH:$COMPLETIONS_ROOT"
+export PATH="$PATH:$APPS_ROOT"
+export PATH="$PATH:$SCRIPT_ROOT"
+export PATH="$PATH:$NVM_DIR"
+export PATH="$PATH:$PYENV_ROOT"
+# STDOUT
+export CLICOLOR=1
+export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
+# EDITOR & TOOLS
+export EDITOR=nano
+export LESSHISTFILE="-"
+# COLOURS - Will be used in other files
+# shellcheck disable=SC2034
+B=$(tput setaf 0) # BLACK
+# shellcheck disable=SC2034
+BB=$(tput setaf 8) # BOLD BLACK
+# shellcheck disable=SC2034
+R=$(tput setaf 1) # RED
+# shellcheck disable=SC2034
+RB=$(tput setaf 9) # BOLD RED
+# shellcheck disable=SC2034
+G=$(tput setaf 2) # GREEN
+# shellcheck disable=SC2034
+GB=$(tput setaf 10) # BOLD GREEN
+# shellcheck disable=SC2034
+Y=$(tput setaf 3) # YELLOW
+# shellcheck disable=SC2034
+YB=$(tput setaf 11) # BOLD YELLOW
+# shellcheck disable=SC2034
+A=$(tput setaf 4) # BLUE
+# shellcheck disable=SC2034
+AB=$(tput setaf 12) # BOLD BLUE
+# shellcheck disable=SC2034
+M=$(tput setaf 5) # MAGENTA
+# shellcheck disable=SC2034
+MB=$(tput setaf 13) # BOLD MAGENTA
+# shellcheck disable=SC2034
+C=$(tput setaf 6) # CYAN
+# shellcheck disable=SC2034
+CB=$(tput setaf 14) # BOLD CYAN
+# shellcheck disable=SC2034
+W=$(tput setaf 7) # WHITE
+# shellcheck disable=SC2034
+WB=$(tput setaf 15) # BOLD WHITE
+# shellcheck disable=SC2034
+RESET=$(tput sgr0) # RESET
