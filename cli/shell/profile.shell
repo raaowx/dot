@@ -57,7 +57,7 @@ echo -e "$CB Loading completion: $RESET"
 case "${INTERPRETER}" in
 "bash")
 	# LOAD BASH COMPLETION
-	BASH_COMPLETION="/usr/local/share/bash-completion/bash_completion"
+	BASH_COMPLETION="$COMPLETIONS_ROOT/completion.bash"
 	if [ -f "$BASH_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB bash $RESET"
 		# This file may change location depending on OS
@@ -158,7 +158,7 @@ if [ -f "$BREW_SERVICES_COMPLETION" ]; then
 fi
 
 # LOAD NVM COMPLETION
-NVM_COMPLETION="/usr/local/opt/nvm/etc/bash_completion.d/nvm"
+NVM_COMPLETION="$COMPLETIONS_ROOT/nvm-completion.shell"
 if [ -f "$NVM_COMPLETION" ]; then
 	echo -e "$CB   ··>$MB nvm $RESET"
 	# This file may change location depending on OS
