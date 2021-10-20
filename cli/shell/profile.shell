@@ -1,59 +1,12 @@
 # shellcheck shell=bash
 # === === === SHELL PROFILE === === === #
-
-# === VARIABLES === #
-INTERPRETER=$(ps -c -o command= -p$$ | tr -d "-")
-declare INTERPRETER_VERSION
-declare NEWLINE
-# The following declarations are colours. Will be used in other files
-# shellcheck disable=SC2034
-B=$(tput setaf 0) # BLACK
-# shellcheck disable=SC2034
-BB=$(tput setaf 8) # BOLD BLACK
-# shellcheck disable=SC2034
-R=$(tput setaf 1) # RED
-# shellcheck disable=SC2034
-RB=$(tput setaf 9) # BOLD RED
-# shellcheck disable=SC2034
-G=$(tput setaf 2) # GREEN
-# shellcheck disable=SC2034
-GB=$(tput setaf 10) # BOLD GREEN
-# shellcheck disable=SC2034
-Y=$(tput setaf 3) # YELLOW
-# shellcheck disable=SC2034
-YB=$(tput setaf 11) # BOLD YELLOW
-# shellcheck disable=SC2034
-A=$(tput setaf 4) # BLUE
-# shellcheck disable=SC2034
-AB=$(tput setaf 12) # BOLD BLUE
-# shellcheck disable=SC2034
-M=$(tput setaf 5) # MAGENTA
-# shellcheck disable=SC2034
-MB=$(tput setaf 13) # BOLD MAGENTA
-# shellcheck disable=SC2034
-C=$(tput setaf 6) # CYAN
-# shellcheck disable=SC2034
-CB=$(tput setaf 14) # BOLD CYAN
-# shellcheck disable=SC2034
-W=$(tput setaf 7) # WHITE
-# shellcheck disable=SC2034
-WB=$(tput setaf 15) # BOLD WHITE
-# shellcheck disable=SC2034
-RESET=$(tput sgr0) # RESET
-
-case "${INTERPRETER}" in
-"bash")
-	INTERPRETER_VERSION=$BASH_VERSION
-	NEWLINE='\n'
-	;;
-"zsh")
-	INTERPRETER_VERSION=$ZSH_VERSION
-	NEWLINE=$'\n'
-	;;
-esac
-
-# === CONFIGURATION === #
-# OPTIONS
+# VARIABLES
+SHELL_VARIABLES="$HOME/.shell_variables"
+if [ -f "$SHELL_VARIABLES" ]; then
+	# shellcheck source=./functions.shell
+	. "$SHELL_VARIABLES"
+fi
+# CONFIGURATION
 case "${INTERPRETER}" in
 "bash") ;;
 "zsh")
@@ -81,26 +34,6 @@ case "${INTERPRETER}" in
 	export RPS2='%F{1}<··%f'
 	;;
 esac
-# STDOUT
-export CLICOLOR=1
-export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
-# LOCALE
-export LANG="en_GB.UTF-8"
-if hostname | grep -Eq '(B|b)(O|o)(X|x)'; then
-	export LC_ALL="en_GB.UTF-8"
-else 
-	export LC_ADDRESS="es_ES.UTF-8"
-	export LC_COLLATE="en_GB.UTF-8"
-	export LC_CTYPE="es_ES.UTF-8"
-	export LC_MONETARY="es_ES.UTF-8"
-	export LC_MEASUREMENT="es_ES.UTF-8"
-	export LC_MESSAGES="en_GB.UTF-8"
-	export LC_NUMERIC="en_GB.UTF-8"
-	export LC_PAPER="es_ES.UTF-8"
-	export LC_RESPONSE="en_GB.UTF-8"
-	export LC_TELEPHONE="es_ES.UTF-8"
-	export LC_TIME="es_ES.UTF-8"
-fi
 # HISTORY
 export HISTSIZE=333    # Number of commands in history
 export SAVEHIST=999999 # Number of lines in file
@@ -115,26 +48,6 @@ case "${INTERPRETER}" in
 	setopt HIST_SAVE_NO_DUPS  # Don't write duplicate entries in the history file
 	;;
 esac
-# EDITOR
-export EDITOR=nano
-# LESS
-export LESSHISTFILE="-"
-# APPS
-export APPS_ROOT="$HOME/.apps"
-# SCRIPTS
-export SCRIPT_ROOT="$HOME/.scripts"
-# COMPLETIONS
-export COMPLETIONS_DIR="$HOME/.completions"
-# NVM
-export NVM_DIR="$HOME/.nvm"
-# PYENV
-export PYENV_ROOT="$HOME/.pyenv"
-# PATH
-export PATH="/usr/local/sbin:$PATH"
-export PATH="$PATH:$APPS_ROOT"
-export PATH="$PATH:$SCRIPT_ROOT"
-export PATH="$PATH:$NVM_DIR"
-export PATH="$PATH:$PYENV_ROOT"
 
 # === WELCOME === #
 echo -e "\n $CB ··> Hi $USER! Welcome to $INTERPRETER $INTERPRETER_VERSION <·· $RESET\n"
@@ -152,7 +65,7 @@ case "${INTERPRETER}" in
 		. "$BASH_COMPLETION"
 	fi
 	# LOAD GIT COMPLETION
-	GIT_COMPLETION="$COMPLETIONS_DIR/git-completion.bash"
+	GIT_COMPLETION="$COMPLETIONS_ROOT/git-completion.bash"
 	if [ -f "$GIT_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB git $RESET"
 		# This file may change location depending on OS
@@ -160,7 +73,7 @@ case "${INTERPRETER}" in
 		. "$GIT_COMPLETION"
 	fi
 	# LOAD DOCKER COMPLETION
-	DOCKER_COMPLETION="$COMPLETIONS_DIR/docker.bash"
+	DOCKER_COMPLETION="$COMPLETIONS_ROOT/docker-completion.bash"
 	if [ -f "$DOCKER_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker $RESET"
 		# This file may change location depending on OS
@@ -168,7 +81,7 @@ case "${INTERPRETER}" in
 		. "$DOCKER_COMPLETION"
 	fi
 	# LOAD DOCKER COMPOSE COMPLETION
-	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_DIR/docker-compose.bash"
+	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.bash"
 	if [ -f "$DOCKER_COMPOSE_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker-compose $RESET"
 		# This file may change location depending on OS
@@ -194,8 +107,8 @@ case "${INTERPRETER}" in
 	# shellcheck disable=SC1083
 	zstyle ':completion:*' select-prompt %SCompletion Scrolling { %l }:%s
 	# LOAD GIT COMPLETION
-	GIT_COMPLETION_ZSH="$COMPLETIONS_DIR/git-completion.zsh"
-	GIT_COMPLETION_BASH="$COMPLETIONS_DIR/git-completion.bash"
+	GIT_COMPLETION_ZSH="$COMPLETIONS_ROOT/git-completion.zsh"
+	GIT_COMPLETION_BASH="$COMPLETIONS_ROOT/git-completion.bash"
 	if [ -f "$GIT_COMPLETION_ZSH" ] && [ -f "$GIT_COMPLETION_BASH" ]; then
 		echo -e "$CB   ··>$MB git $RESET"
 		zstyle ':completion:*:*:git:*' script "$GIT_COMPLETION_BASH"
@@ -205,7 +118,7 @@ case "${INTERPRETER}" in
 		fpath=("$GIT_COMPLETION_ZSH" $fpath)
 	fi
 	# LOAD DOCKER COMPLETION
-	DOCKER_COMPLETION="$COMPLETIONS_DIR/docker.zsh"
+	DOCKER_COMPLETION="$COMPLETIONS_ROOT/docker-completion.zsh"
 	if [ -f "$DOCKER_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker $RESET"
 		# Shellcheck doesn't support linting over ZSH instructions
@@ -214,7 +127,7 @@ case "${INTERPRETER}" in
 		fpath=("$DOCKER_COMPLETION" $fpath)
 	fi
 	# LOAD DOCKER COMPOSE COMPLETION
-	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_DIR/docker-compose.zsh"
+	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.zsh"
 	if [ -f "$DOCKER_COMPOSE_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker-compose $RESET"
 		# Shellcheck doesn't support linting over ZSH instructions
@@ -271,22 +184,6 @@ if [ -f "$SHELL_FUNCTIONS" ]; then
 	. "$SHELL_FUNCTIONS"
 fi
 
-SHELL_BOX="$HOME/.shell_box"
-if [ -f "$SHELL_BOX" ]; then
-	echo -e "$CB   ··>$MB box $RESET"
-	# This file may not exists
-	# shellcheck disable=SC1090
-	. "$SHELL_BOX"
-fi
-
-SHELL_JOB="$HOME/.shell_job"
-if [ -f "$SHELL_JOB" ]; then
-	echo -e "$CB   ··>$MB job $RESET"
-	# This file may not exists
-	# shellcheck disable=SC1090
-	. "$SHELL_JOB"
-fi
-
 # LOAD NVM
 if [ -f "/usr/local/opt/nvm/nvm.sh" ]; then
 	echo -e "$CB   ··>$MB nvm $RESET"
@@ -297,6 +194,24 @@ fi
 if command -v pyenv 1> /dev/null 2>&1; then
 	echo -e "$CB   ··>$MB pyenv $RESET"
 	eval "$(pyenv init -)"
+fi
+
+SHELL_BOX="$HOME/.shell_box"
+if [ -f "$SHELL_BOX" ]; then
+	echo -e "$NEWLINE"
+	echo -e "$CB Loading box: $RESET"
+	# This file may not exists
+	# shellcheck disable=SC1090
+	. "$SHELL_BOX"
+fi
+
+SHELL_JOB="$HOME/.shell_job"
+if [ -f "$SHELL_JOB" ]; then
+	echo -e "$NEWLINE"
+	echo -e "$CB Loading job: $RESET"
+	# This file may not exists
+	# shellcheck disable=SC1090
+	. "$SHELL_JOB"
 fi
 
 echo -e "\n $CB ··> All tools were loaded, enjoy your shell <·· $RESET\n"
