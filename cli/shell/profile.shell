@@ -2,7 +2,7 @@
 # === === === SHELL PROFILE === === === #
 # VARIABLES
 SHELL_VARIABLES="$HOME/.shell_variables"
-if [ -f "$SHELL_VARIABLES" ]; then
+if [ -r "$SHELL_VARIABLES" ]; then
 	# shellcheck source=./functions.shell
 	. "$SHELL_VARIABLES"
 fi
@@ -58,7 +58,7 @@ case "${INTERPRETER}" in
 "bash")
 	# LOAD BASH COMPLETION
 	BASH_COMPLETION="$COMPLETIONS_ROOT/completion.bash"
-	if [ -f "$BASH_COMPLETION" ]; then
+	if [ -r "$BASH_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB bash $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
@@ -66,7 +66,7 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD GIT COMPLETION
 	GIT_COMPLETION="$COMPLETIONS_ROOT/git-completion.bash"
-	if [ -f "$GIT_COMPLETION" ]; then
+	if [ -r "$GIT_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB git $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
@@ -74,7 +74,7 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD DOCKER COMPLETION
 	DOCKER_COMPLETION="$COMPLETIONS_ROOT/docker-completion.bash"
-	if [ -f "$DOCKER_COMPLETION" ]; then
+	if [ -r "$DOCKER_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
@@ -82,11 +82,26 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD DOCKER COMPOSE COMPLETION
 	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.bash"
-	if [ -f "$DOCKER_COMPOSE_COMPLETION" ]; then
+	if [ -r "$DOCKER_COMPOSE_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker-compose $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
 		. "$DOCKER_COMPOSE_COMPLETION"
+	fi
+	# LOAD BREW COMPLETION
+	if type brew &>/dev/null; then
+		HOMEBREW_PREFIX="$(brew --prefix)"
+		if [ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]; then
+			echo -e "$CB   ··>$MB brew $RESET"
+			. "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
+		else
+			for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
+				if [ -r "${COMPLETION}" ]; then
+					echo -e "$CB   ··>$MB brew $RESET"
+					. "${COMPLETION}"
+				fi
+			done
+		fi
 	fi
 	;;
 "zsh")
@@ -109,7 +124,7 @@ case "${INTERPRETER}" in
 	# LOAD GIT COMPLETION
 	GIT_COMPLETION_ZSH="$COMPLETIONS_ROOT/git-completion.zsh"
 	GIT_COMPLETION_BASH="$COMPLETIONS_ROOT/git-completion.bash"
-	if [ -f "$GIT_COMPLETION_ZSH" ] && [ -f "$GIT_COMPLETION_BASH" ]; then
+	if [ -r "$GIT_COMPLETION_ZSH" ] && [ -r "$GIT_COMPLETION_BASH" ]; then
 		echo -e "$CB   ··>$MB git $RESET"
 		zstyle ':completion:*:*:git:*' script "$GIT_COMPLETION_BASH"
 		# Shellcheck doesn't support linting over ZSH instructions
@@ -119,7 +134,7 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD DOCKER COMPLETION
 	DOCKER_COMPLETION="$COMPLETIONS_ROOT/docker-completion.zsh"
-	if [ -f "$DOCKER_COMPLETION" ]; then
+	if [ -r "$DOCKER_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker $RESET"
 		# Shellcheck doesn't support linting over ZSH instructions
 		# https://github.com/koalaman/shellcheck/issues/809
@@ -128,38 +143,25 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD DOCKER COMPOSE COMPLETION
 	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.zsh"
-	if [ -f "$DOCKER_COMPOSE_COMPLETION" ]; then
+	if [ -r "$DOCKER_COMPOSE_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker-compose $RESET"
 		# Shellcheck doesn't support linting over ZSH instructions
 		# https://github.com/koalaman/shellcheck/issues/809
 		# shellcheck disable=SC2128,SC2206
 		fpath=("$DOCKER_COMPOSE_COMPLETION" $fpath)
 	fi
+	# LOAD BREW COMPLETION
+	if type brew &>/dev/null; then
+		echo -e "$CB   ··>$MB brew $RESET"
+		FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+	fi
 	autoload -Uz compinit && compinit
 	;;
 esac
 
-# LOAD BREW COMPLETION
-BREW_COMPLETION="/usr/local/etc/bash_completion.d/brew"
-if [ -f "$BREW_COMPLETION" ]; then
-	echo -e "$CB   ··>$MB brew $RESET"
-	# This file may change location depending on OS
-	# shellcheck disable=SC1090
-	. "$BREW_COMPLETION"
-fi
-
-# LOAD BREW SERVICES COMPLETION
-BREW_SERVICES_COMPLETION="/usr/local/etc/bash_completion.d/brew-services"
-if [ -f "$BREW_SERVICES_COMPLETION" ]; then
-	echo -e "$CB   ··>$MB brew-services $RESET"
-	# This file may change location depending on OS
-	# shellcheck disable=SC1090
-	. "$BREW_SERVICES_COMPLETION"
-fi
-
 # LOAD NVM COMPLETION
 NVM_COMPLETION="$COMPLETIONS_ROOT/nvm-completion.shell"
-if [ -f "$NVM_COMPLETION" ]; then
+if [ -r "$NVM_COMPLETION" ]; then
 	echo -e "$CB   ··>$MB nvm $RESET"
 	# This file may change location depending on OS
 	# shellcheck disable=SC1090
@@ -171,21 +173,21 @@ echo -e "$CB Loading scripts: $RESET"
 
 # LOAD FILES
 SHELL_ALIASES="$HOME/.shell_aliases"
-if [ -f "$SHELL_ALIASES" ]; then
+if [ -r "$SHELL_ALIASES" ]; then
 	echo -e "$CB   ··>$MB aliases $RESET"
 	# shellcheck source=./aliases.shell
 	. "$SHELL_ALIASES"
 fi
 
 SHELL_FUNCTIONS="$HOME/.shell_functions"
-if [ -f "$SHELL_FUNCTIONS" ]; then
+if [ -r "$SHELL_FUNCTIONS" ]; then
 	echo -e "$CB   ··>$MB functions $RESET"
 	# shellcheck source=./functions.shell
 	. "$SHELL_FUNCTIONS"
 fi
 
 # LOAD NVM
-if [ -f "/usr/local/opt/nvm/nvm.sh" ]; then
+if [ -r "/usr/local/opt/nvm/nvm.sh" ]; then
 	echo -e "$CB   ··>$MB nvm $RESET"
 	. "/usr/local/opt/nvm/nvm.sh"
 fi
@@ -197,7 +199,7 @@ if command -v pyenv 1> /dev/null 2>&1; then
 fi
 
 SHELL_BOX="$HOME/.shell_box"
-if [ -f "$SHELL_BOX" ]; then
+if [ -r "$SHELL_BOX" ]; then
 	echo -e "$NEWLINE"
 	echo -e "$CB Loading box: $RESET"
 	# This file may not exists
@@ -206,7 +208,7 @@ if [ -f "$SHELL_BOX" ]; then
 fi
 
 SHELL_JOB="$HOME/.shell_job"
-if [ -f "$SHELL_JOB" ]; then
+if [ -r "$SHELL_JOB" ]; then
 	echo -e "$NEWLINE"
 	echo -e "$CB Loading job: $RESET"
 	# This file may not exists
@@ -218,7 +220,7 @@ echo -e "\n $CB ··> All tools were loaded, enjoy your shell <·· $RESET\n"
 
 # LOAD SHELL INIT
 SHELL_INIT="$HOME/.shell_init"
-if [ -f "$SHELL_INIT" ]; then
+if [ -r "$SHELL_INIT" ]; then
 	# shellcheck source=./init.shell
 	. "$SHELL_INIT"
 fi
