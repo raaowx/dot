@@ -18,6 +18,7 @@ This repository has been created for store and backup all configurations of my d
 * [tools](./tools/)
   * [git](./tools/git)
   * [neofetch](./tools/neofetch)
+  * [rectangle](./tools/rectangle)
 
 ## License & Copyright
 
