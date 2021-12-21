@@ -37,7 +37,6 @@ export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export BREW_ROOT="/opt/homebrew/bin"
 export NVM_ROOT="$HOME/.nvm"
-export PYENV_ROOT="$HOME/.pyenv"
 # PATH
 export PATH="/usr/local/sbin:$PATH"
 export PATH="$PATH:$COMPLETIONS_ROOT"
@@ -45,7 +44,6 @@ export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
 export PATH="$PATH:$BREW_ROOT"
 export PATH="$PATH:$NVM_ROOT"
-export PATH="$PATH:$PYENV_ROOT"
 # STDOUT
 export CLICOLOR=1
 export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
