@@ -192,12 +192,6 @@ if [ -r "/usr/local/opt/nvm/nvm.sh" ]; then
 	. "/usr/local/opt/nvm/nvm.sh"
 fi
 
-# LOAD PYENV
-if command -v pyenv 1> /dev/null 2>&1; then
-	echo -e "$CB   ··>$MB pyenv $RESET"
-	eval "$(pyenv init -)"
-fi
-
 SHELL_BOX="$HOME/.shell_box"
 if [ -r "$SHELL_BOX" ]; then
 	echo -e "$NEWLINE"
