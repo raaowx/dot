@@ -93,11 +93,15 @@ case "${INTERPRETER}" in
 		HOMEBREW_PREFIX="$(brew --prefix)"
 		if [ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]; then
 			echo -e "$CB   ··>$MB brew $RESET"
+			# This file may change location depending on OS
+			# shellcheck disable=SC1091
 			. "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 		else
 			for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
 				if [ -r "${COMPLETION}" ]; then
 					echo -e "$CB   ··>$MB brew $RESET"
+					# This file may change location depending on OS
+					# shellcheck disable=SC1090
 					. "${COMPLETION}"
 				fi
 			done
@@ -111,7 +115,7 @@ case "${INTERPRETER}" in
 	zstyle ':completion:*' completer _expand _complete _ignored _approximate
 	# Shellcheck doesn't support linting over ZSH instructions
 	# https://github.com/koalaman/shellcheck/issues/809
-	# shellcheck disable=SC2086
+	# shellcheck disable=SC2086,SC2296
 	zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
 	zstyle ':completion:*' matcher-list 'm:{[:lower:][:upper:]}={[:upper:][:lower:]}' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*' 'm:{[:lower:][:upper:]}={[:upper:][:lower:]} l:|=* r:|=*'
 	zstyle ':completion:*' list-suffixes
@@ -129,7 +133,7 @@ case "${INTERPRETER}" in
 		zstyle ':completion:*:*:git:*' script "$GIT_COMPLETION_BASH"
 		# Shellcheck doesn't support linting over ZSH instructions
 		# https://github.com/koalaman/shellcheck/issues/809
-		# shellcheck disable=SC2206
+		# shellcheck disable=SC2206,SC2128
 		fpath=("$GIT_COMPLETION_ZSH" $fpath)
 	fi
 	# LOAD DOCKER COMPLETION
@@ -189,6 +193,8 @@ fi
 # LOAD NVM
 if [ -r "/usr/local/opt/nvm/nvm.sh" ]; then
 	echo -e "$CB   ··>$MB nvm $RESET"
+	# This file may change location depending on OS
+	# shellcheck disable=SC1091
 	. "/usr/local/opt/nvm/nvm.sh"
 fi
 
