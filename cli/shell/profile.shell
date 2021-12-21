@@ -58,7 +58,7 @@ case "${INTERPRETER}" in
 "bash")
 	# LOAD BASH COMPLETION
 	BASH_COMPLETION="$COMPLETIONS_ROOT/completion.bash"
-	if [ -r "$BASH_COMPLETION" ]; then
+	if [ -r "$BASH_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB bash $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
@@ -66,7 +66,7 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD GIT COMPLETION
 	GIT_COMPLETION="$COMPLETIONS_ROOT/git-completion.bash"
-	if [ -r "$GIT_COMPLETION" ]; then
+	if [ -r "$GIT_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB git $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
@@ -82,7 +82,7 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD DOCKER COMPOSE COMPLETION
 	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.bash"
-	if [ -r "$DOCKER_COMPOSE_COMPLETION" ]; then
+	if [ -r "$DOCKER_COMPOSE_COMPLETION" ]; then
 		echo -e "$CB   ··>$MB docker-compose $RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
