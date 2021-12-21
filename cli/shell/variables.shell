@@ -31,17 +31,22 @@ else
 	export LC_TELEPHONE="es_ES.UTF-8"
 	export LC_TIME="es_ES.UTF-8"
 fi
-# DIRECTORIES
-export COMPLETIONS_ROOT="$HOME/.completions"
+# DIRECTORIES - HOME
+export GEM_HOME="$HOME/.local/share/gem"
+export BREW_HOME="/opt/homebrew"
+# DIRECTORIES - ROOT (EXEC)
 export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
-export BREW_ROOT="/opt/homebrew/bin"
+export COMPLETIONS_ROOT="$HOME/.completions"
+export GEM_ROOT="$GEM_HOME/bin"
+export BREW_ROOT="$BREW_HOME/bin"
 export NVM_ROOT="$HOME/.nvm"
 # PATH
 export PATH="/usr/local/sbin:$PATH"
-export PATH="$PATH:$COMPLETIONS_ROOT"
 export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
+export PATH="$PATH:$COMPLETIONS_ROOT"
+export PATH="$PATH:$GEM_ROOT"
 export PATH="$PATH:$BREW_ROOT"
 export PATH="$PATH:$NVM_ROOT"
 # STDOUT
