@@ -1,7 +1,6 @@
 aaron-bond.better-comments
 aprilandjan.ascii-tree-generator
 bierner.markdown-preview-github-styles
-CoenraadS.bracket-pair-colorizer-2
 DavidAnson.vscode-markdownlint
 dbaeumer.vscode-eslint
 dnicolson.binary-plist
