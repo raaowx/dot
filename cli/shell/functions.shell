@@ -42,15 +42,21 @@ gitbranch() {
 }
 gitignore() {
   PARAM="linux,macos,windows"
+  FILE=".gitignore"
   if [ $# -ne 0 ]; then
     for name in "$@"; do
       PARAM="$PARAM,$name"
     done
-    echo -e "$WB Creating '$RB.gitignore$WB' with provided values:$YB $PARAM $RESET"
+    echo -e "$WB Creating '$RB$FILE$WB' with provided values:$YB $PARAM $RESET"
   else
-    echo -e "$WB Creating '$RB.gitignore$WB' with default values:$YB $PARAM $RESET"
+    echo -e "$WB Creating '$RB$FILE$WB' with default values:$YB $PARAM $RESET"
   fi
-  curl --connect-timeout 10 -f -s -L "toptal.com/developers/gitignore/api/$PARAM" -o .gitignore
+  curl --connect-timeout 10 -f -s -L "toptal.com/developers/gitignore/api/$PARAM" -o "$FILE"
+  if [ ! -f "$FILE" ]; then
+    echo -e "\n$RB [ERROR] Unable to create '$FILE' file$RESET\n"
+    echo -e "$WB You can check if your parameters are valid by performing:"
+    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"toptal.com/developers/gitignore/api/list\" | grep -o \"\w*%PARAMATER%\w*\"$WB <<$RESET\n"
+  fi
 }
 # H
 hosts() {
@@ -98,11 +104,11 @@ random-password() {
     if [[ " ${OPTIONS[*]} " =~ ${1} ]]; then
       echo -e "$WB ··> Random password with $1 bytes:$YB $(openssl rand "$1" | openssl base64 -a)$RESET"
     else
-      echo -e "\n$RB [ERROR] Remember to pass one of the following positive integers as parameter: ${OPTIONS[*]} $RESET\n"
+      echo -e "\n$RB [ERROR] Remember to use one of the following positive integers as parameter: ${OPTIONS[*]} $RESET\n"
       echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
     fi
   else
-    echo -e "\n$RB [ERROR] Remember to pass only one positive integer as parameter$RESET\n"
+    echo -e "\n$RB [ERROR] Remember to use only one positive integer as parameter$RESET\n"
     echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
   fi
 }
@@ -133,16 +139,30 @@ repoinfo() {
       echo -e "$WB ··> Last $1 commits:$RESET"
       git log -n "$1" --oneline
     else
-      echo -e "\n$RB [ERROR] Remember to pass only one positive integer as parameter$RESET\n"
+      echo -e "\n$RB [ERROR] Remember to use only one positive integer as parameter$RESET\n"
       echo -e "$WB ··> Last 5 commits:$RESET"
       git log -n 5 --oneline
     fi
     echo
   else
-    echo -e "$RB [ERROR] There's no repository here$RESET"
+    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
   fi
 }
 # S
+static-webserver() {
+  SWS_DIR="./"
+  if ! which python3 > /dev/null; then
+    echo -e "\n$RB [ERROR] Python v3.X wasn't found in the OS$RESET\n"
+    exit 1 
+  fi
+  if [ "$#" -gt 0 ] && [ ! -d "$1" ]; then
+    echo -e "\n$RB [ERROR] The parameter '$1' is not a directory, ignoring...$RESET\n"
+  elif [ -d "$1" ]; then
+    SWS_DIR="$1"
+  fi
+  echo "$WB Starting static web server at '$SWS_DIR'$RESET"
+  python3 -m http.server --directory "$SWS_DIR" 80
+}
 # T
 # U
 update_terminal_cwd() {
