@@ -1,8 +1,6 @@
 {
     "update.mode": "start",
     "extensions.ignoreRecommendations": true,
-    "telemetry.enableCrashReporter": false,
-    "telemetry.enableTelemetry": false,
     "problems.showCurrentInStatus": true,
     "window.restoreFullscreen": true,
     "window.restoreWindows": "none",
@@ -27,7 +25,6 @@
     "editor.formatOnPaste": true,
     "editor.minimap.size": "fill",
     "editor.suggest.insertMode": "replace",
-    "editor.suggest.statusBar.visible": true,
     "editor.suggestSelection": "recentlyUsedByPrefix",
     "diffEditor.ignoreTrimWhitespace": false,
     "search.sortOrder": "fileNames",
@@ -43,7 +40,6 @@
     "zenMode.hideActivityBar": false,
     "zenMode.hideStatusBar": false,
     "zenMode.hideTabs": false,
-    "todo-tree.tree.showScanModeButton": false,
     "editor.minimap.enabled": true,
     "workbench.iconTheme": "vscode-icons",
     "workbench.editor.showIcons": false,
@@ -59,28 +55,27 @@
     "diffEditor.codeLens": true,
     "editor.minimap.scale": 2,
     "editor.acceptSuggestionOnEnter": "off",
-    "editor.suggest.maxVisibleSuggestions": 15,
     "editor.formatOnSaveMode": "modifications",
     "files.associations": {
         "*.shell": "shellscript"
     },
     "todo-tree.general.tags": [
-        "BUG",
-        "HACK",
-        "FIXME",
-        "TODO",
-        "XXX",
         "[ ]",
         "[x]",
-        "WARNING",
+        "BUG",
+        "FIX",
+        "FIXME",
+        "HACK",
+        "HACKME",
         "NOTE",
-        "FIX"
+        "TODO",
+        "WARNING",
+        "XXX",
     ],
     "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
     "cSpell.enabled": true,
-    "cSpell.language": "es,en,en-GB,en-US,es-ES",
+    "cSpell.language": "es,en,es-ES,en-GB,en-US",
     "window.zoomLevel": 0.5,
-    "thunder-client.enableSaveOption": true,
     "shellcheck.customArgs": [
         "-x"
     ],
@@ -199,6 +194,7 @@
     "gitlens.blame.highlight.locations": [
         "line"
     ],
-    "browser-preview.startUrl": "",
-    "browser-preview.verbose": true
+    "workbench.enableExperiments": false,
+    "extensions.autoUpdate": false,
+    "telemetry.telemetryLevel": "off"
 }
