@@ -42,7 +42,6 @@
     "zenMode.hideTabs": false,
     "editor.minimap.enabled": true,
     "workbench.iconTheme": "vscode-icons",
-    "workbench.editor.showIcons": false,
     "update.showReleaseNotes": false,
     "explorer.confirmDragAndDrop": false,
     "explorer.confirmDelete": false,
@@ -198,5 +197,7 @@
     "extensions.autoUpdate": false,
     "telemetry.telemetryLevel": "off",
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, monospace",
-    "editor.fontLigatures": true
+    "editor.fontLigatures": true,
+    "workbench.editor.showIcons": false,
+    "workbench.colorTheme": "Xcode Partial (Dark)"
 }
