@@ -191,11 +191,11 @@ if [ -r "$SHELL_FUNCTIONS" ]; then
 fi
 
 # LOAD NVM
-if [ -r "/usr/local/opt/nvm/nvm.sh" ]; then
+if [ -r "$NVM_ROOT/nvm.sh" ]; then
 	echo -e "$CB   ··>$MB nvm $RESET"
 	# This file may change location depending on OS
 	# shellcheck disable=SC1091
-	. "/usr/local/opt/nvm/nvm.sh"
+	. "$NVM_ROOT/nvm.sh"
 fi
 
 SHELL_BOX="$HOME/.shell_box"
