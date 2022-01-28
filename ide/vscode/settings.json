@@ -194,7 +194,6 @@
         "line"
     ],
     "workbench.enableExperiments": false,
-    "extensions.autoUpdate": false,
     "telemetry.telemetryLevel": "off",
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,
