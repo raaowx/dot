@@ -74,7 +74,6 @@
     "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
     "cSpell.enabled": true,
     "cSpell.language": "es,en,es-ES,en-GB,en-US",
-    "window.zoomLevel": 0.5,
     "shellcheck.customArgs": [
         "-x"
     ],
@@ -198,5 +197,7 @@
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,
     "workbench.editor.showIcons": false,
-    "workbench.colorTheme": "Xcode Partial (Dark)"
+    "workbench.colorTheme": "Xcode Partial (Dark)",
+    "indentRainbow.indicatorStyle": "light",
+    "indentRainbow.lightIndicatorStyleLineWidth": 5
 }
