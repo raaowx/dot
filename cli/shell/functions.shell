@@ -64,11 +64,7 @@ hosts() {
   if which bat &> /dev/null; then
     bat $HOSTS
   else
-    if which lolcat &> /dev/null; then
-      lolcat $HOSTS
-    else
-      cat $HOSTS
-    fi
+    cat $HOSTS
   fi
 }
 # I
