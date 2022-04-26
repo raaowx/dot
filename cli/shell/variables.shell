@@ -32,22 +32,23 @@ else
 	export LC_TIME="es_ES.UTF-8"
 fi
 # DIRECTORIES - HOME
-export GEM_HOME="$HOME/.local/share/gem"
 export BREW_HOME="/opt/homebrew"
+export GEM_HOME="$HOME/.local/share/gem"
 # DIRECTORIES - ROOT (EXEC)
+export BREW_ROOT="$BREW_HOME/bin"
+export GEM_ROOT="$GEM_HOME/bin"
 export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export COMPLETIONS_ROOT="$HOME/.completions"
-export GEM_ROOT="$GEM_HOME/bin"
-export BREW_ROOT="$BREW_HOME/bin"
 export NVM_ROOT="$HOME/.nvm"
 # PATH
 export PATH="/usr/local/sbin:$PATH"
+export PATH="/usr/local/bin:$PATH"
+export PATH="$GEM_ROOT:$PATH"
+export PATH="$BREW_ROOT:$PATH"
 export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
 export PATH="$PATH:$COMPLETIONS_ROOT"
-export PATH="$PATH:$GEM_ROOT"
-export PATH="$PATH:$BREW_ROOT"
 export PATH="$PATH:$NVM_ROOT"
 # STDOUT
 export CLICOLOR=1
