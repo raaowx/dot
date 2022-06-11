@@ -199,5 +199,6 @@
     "workbench.editor.showIcons": false,
     "workbench.colorTheme": "Xcode Partial (Dark)",
     "indentRainbow.indicatorStyle": "light",
-    "indentRainbow.lightIndicatorStyleLineWidth": 5
+    "indentRainbow.lightIndicatorStyleLineWidth": 5,
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB"
 }
