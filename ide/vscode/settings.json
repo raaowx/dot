@@ -1,5 +1,5 @@
 {
-    "update.mode": "start",
+    "update.mode": "manual",
     "extensions.ignoreRecommendations": true,
     "problems.showCurrentInStatus": true,
     "window.restoreFullscreen": true,
@@ -13,7 +13,6 @@
     "workbench.editor.tabCloseButton": "left",
     "workbench.editor.untitled.labelFormat": "name",
     "workbench.settings.enableNaturalLanguageSearch": false,
-    "workbench.startupEditor": "newUntitledFile",
     "workbench.colorCustomizations": {
         "terminal.foreground": "#00C800",
         "terminal.background": "#333333"
@@ -80,125 +79,18 @@
     "cSpell.userWords": [
         "raaowx"
     ],
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "gitlens.hovers.currentLine.over": "line",
-    "gitlens.currentLine.format": "[${id}] ${message} (${author} - ${agoOrDateShort})",
-    "gitlens.statusBar.format": "[${id}] ${message} (${author} - ${agoOrDateShort})",
-    "gitlens.statusBar.alignment": "left",
-    "gitlens.currentLine.enabled": false,
-    "gitlens.codeLens.scopes": [],
-    "gitlens.codeLens.authors.enabled": false,
-    "gitlens.codeLens.recentChange.enabled": false,
-    "gitlens.codeLens.enabled": false,
-    "gitlens.statusBar.command": "gitlens.revealCommitInView",
-    "gitlens.views.commits.files.layout": "tree",
-    "gitlens.views.formats.commits.label": "[${id}] ${message}",
-    "gitlens.views.formats.commits.description": "(${author} - ${agoOrDateShort})",
-    "gitlens.views.commits.avatars": false,
-    "gitlens.hovers.avatars": false,
-    "gitlens.hovers.currentLine.changes": false,
-    "gitlens.hovers.currentLine.details": false,
-    "gitlens.hovers.currentLine.enabled": false,
-    "gitlens.hovers.annotations.changes": false,
-    "gitlens.hovers.annotations.details": false,
-    "gitlens.hovers.annotations.enabled": false,
-    "gitlens.hovers.enabled": false,
-    "gitlens.views.fileHistory.files.layout": "list",
-    "gitlens.views.fileHistory.avatars": false,
-    "gitlens.views.lineHistory.avatars": false,
-    "gitlens.views.repositories.showBranchComparison": false,
-    "gitlens.views.repositories.showUpstreamStatus": false,
-    "gitlens.views.repositories.showStashes": false,
-    "gitlens.views.repositories.showRemotes": false,
-    "gitlens.views.repositories.showCommits": false,
-    "gitlens.views.repositories.avatars": false,
-    "gitlens.views.repositories.branches.layout": "list",
-    "gitlens.views.repositories.files.layout": "tree",
-    "gitlens.sortBranchesBy": "name:asc",
-    "gitlens.sortContributorsBy": "name:asc",
-    "gitlens.views.repositories.showContributors": false,
-    "gitlens.views.repositories.showBranches": false,
-    "gitlens.views.repositories.showTags": false,
-    "gitlens.views.branches.branches.layout": "list",
-    "gitlens.views.branches.files.layout": "tree",
-    "gitlens.views.branches.avatars": false,
-    "gitlens.views.remotes.branches.layout": "list",
-    "gitlens.views.remotes.files.layout": "tree",
-    "gitlens.views.remotes.avatars": false,
-    "gitlens.views.stashes.files.layout": "tree",
-    "gitlens.views.formats.stashes.description": "${id}",
-    "gitlens.views.tags.branches.layout": "list",
-    "gitlens.views.tags.files.layout": "tree",
-    "gitlens.views.tags.avatars": false,
-    "gitlens.views.contributors.files.layout": "tree",
-    "gitlens.views.contributors.avatars": false,
-    "gitlens.views.searchAndCompare.files.layout": "tree",
-    "gitlens.views.searchAndCompare.avatars": false,
-    "gitlens.mode.statusBar.enabled": false,
-    "gitlens.menus": {
-        "editor": {
-            "blame": true,
-            "clipboard": true,
-            "compare": true,
-            "history": true,
-            "remote": true
-        },
-        "editorGroup": {
-            "blame": true,
-            "compare": true
-        },
-        "editorTab": {
-            "clipboard": true,
-            "compare": true,
-            "history": true,
-            "remote": true
-        },
-        "explorer": {
-            "clipboard": true,
-            "compare": true,
-            "history": true,
-            "remote": true
-        },
-        "scm": {
-            "authors": true
-        },
-        "scmGroupInline": {
-            "stash": true
-        },
-        "scmGroup": {
-            "compare": true,
-            "openClose": true,
-            "stash": true
-        },
-        "scmItem": {
-            "clipboard": true,
-            "compare": true,
-            "history": true,
-            "remote": true,
-            "stash": true
-        }
-    },
-    "gitlens.defaultDateFormat": "ddd DD.MM.YYYY - HH:mm:ss",
-    "gitlens.defaultDateShortFormat": "DD.MM.YY - HH:mm",
-    "gitlens.defaultTimeFormat": "HH:mm",
-    "gitlens.heatmap.locations": [
-        "gutter"
-    ],
-    "gitlens.changes.locations": [
-        "gutter"
-    ],
-    "gitlens.blame.avatars": false,
-    "gitlens.blame.format": "[${id}] ${agoOrDateShort|7-}",
-    "gitlens.blame.highlight.locations": [
-        "line"
-    ],
     "workbench.enableExperiments": false,
     "telemetry.telemetryLevel": "off",
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,
     "workbench.editor.showIcons": false,
-    "workbench.colorTheme": "Xcode Partial (Dark)",
     "indentRainbow.indicatorStyle": "light",
     "indentRainbow.lightIndicatorStyleLineWidth": 5,
-    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB"
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
+    "workbench.colorTheme": "Monokai Dimmed",
+    "workbench.welcomePage.walkthroughs.openOnInstall": false,
+    "editor.multiCursorModifier": "ctrlCmd",
+    "editor.gotoLocation.alternativeDeclarationCommand": "",
+    "editor.gotoLocation.alternativeDefinitionCommand": "",
+    "editor.gotoLocation.alternativeTypeDefinitionCommand": ""
 }
