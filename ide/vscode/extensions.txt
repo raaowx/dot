@@ -6,7 +6,6 @@ DavidAnson.vscode-markdownlint
 dbaeumer.vscode-eslint
 dnicolson.binary-plist
 DotJoshJohnson.xml
-eamodio.gitlens
 esbenp.prettier-vscode
 foxundermoon.shell-format
 GitHub.remotehub
@@ -17,11 +16,10 @@ mkxml.vscode-filesize
 ms-azuretools.vscode-docker
 ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
+ms-vscode.remote-explorer
 ms-vscode.remote-repositories
 oderwat.indent-rainbow
-rangav.vscode-thunder-client
 Remisa.shellman
-smockle.xcode-default-theme
 sswg.swift-lang
 streetsidesoftware.code-spell-checker
 streetsidesoftware.code-spell-checker-spanish
