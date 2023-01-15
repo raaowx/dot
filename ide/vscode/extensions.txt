@@ -1,5 +1,6 @@
 aaron-bond.better-comments
 aprilandjan.ascii-tree-generator
+bierner.markdown-checkbox
 bierner.markdown-emoji
 bierner.markdown-preview-github-styles
 DavidAnson.vscode-markdownlint
@@ -9,7 +10,6 @@ DotJoshJohnson.xml
 esbenp.prettier-vscode
 foxundermoon.shell-format
 GitHub.remotehub
-GitHub.vscode-pull-request-github
 Gruntfuggly.todo-tree
 hediet.vscode-drawio
 mkxml.vscode-filesize
@@ -29,5 +29,6 @@ usernamehw.errorlens
 vadimcn.vscode-lldb
 vscode-icons-team.vscode-icons
 vsls-contrib.gistfs
+waderyan.gitblame
 wix.vscode-import-cost
 yzhang.markdown-all-in-one
