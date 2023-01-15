@@ -4,21 +4,21 @@ This repository has been created for store and backup all configurations of my d
 
 ## Tree
 
-* [cli](./cli/)
-  * [bash](./cli/bash)
-  * [shell](./cli/shell)
-  * [zsh](./cli/zsh)
-* [ide](./ide/)
-  * [nano](./ide/nano)
-  * [vsc](./ide/vsc)
-  * [xcode](./ide/xcode)
-* [terminal](./terminal/)
-  * [iterm2](./terminal/iterm2)
-  * [macos](./terminal/macos)
-* [tools](./tools/)
-  * [git](./tools/git)
-  * [neofetch](./tools/neofetch)
-  * [rectangle](./tools/rectangle)
+* [CLI](./cli/)
+  * [Bash](./cli/bash)
+  * [Shell](./cli/shell)
+  * [ZSH](./cli/zsh)
+* [IDE](./ide/)
+  * [Nano](./ide/nano)
+  * [VSC (*VSCode & VSCodium*)](./ide/vsc)
+  * [XCode](./ide/xcode)
+* [Terminal](./terminal/)
+  * [iTerm2](./terminal/iterm2)
+  * [MacOS](./terminal/macos)
+* [Tools](./tools/)
+  * [Git](./tools/git)
+  * [Neofetch](./tools/neofetch)
+  * [Rectangle](./tools/rectangle)
 
 ## License & Copyright
 
