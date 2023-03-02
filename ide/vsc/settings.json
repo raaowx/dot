@@ -8,7 +8,7 @@
     "diffEditor.codeLens": true,
     "diffEditor.ignoreTrimWhitespace": false,
     "editor.acceptSuggestionOnEnter": "off",
-    "editor.cursorSmoothCaretAnimation": true,
+    "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorStyle": "block",
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,
@@ -65,7 +65,7 @@
         "WARNING",
         "XXX",
         "[ ]",
-        "[x]",
+        "[x]"
     ],
     "todo-tree.regex.regex": "(//|#|<!--|;|/\\*|^|^\\s*(-|\\d+.))\\s*($TAGS)",
     "update.mode": "manual",
