@@ -16,6 +16,7 @@ mkxml.vscode-filesize
 ms-azuretools.vscode-docker
 ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
+ms-vscode.live-server
 ms-vscode.remote-explorer
 ms-vscode.remote-repositories
 oderwat.indent-rainbow
