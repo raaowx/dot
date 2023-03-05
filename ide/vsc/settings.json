@@ -77,7 +77,6 @@
         "terminal.background": "#333333",
         "terminal.foreground": "#00C800"
     },
-    "workbench.colorTheme": "Monokai Dimmed",
     "workbench.editor.closeOnFileDelete": true,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editor.openPositioning": "last",
