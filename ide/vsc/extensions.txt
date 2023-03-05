@@ -1,4 +1,5 @@
 aaron-bond.better-comments
+albert.TabOut
 aprilandjan.ascii-tree-generator
 bierner.markdown-checkbox
 bierner.markdown-emoji
@@ -12,6 +13,7 @@ foxundermoon.shell-format
 GitHub.remotehub
 Gruntfuggly.todo-tree
 hediet.vscode-drawio
+mechatroner.rainbow-csv
 mkxml.vscode-filesize
 ms-azuretools.vscode-docker
 ms-vscode-remote.remote-ssh
