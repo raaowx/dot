@@ -13,6 +13,7 @@ foxundermoon.shell-format
 GitHub.remotehub
 Gruntfuggly.todo-tree
 hediet.vscode-drawio
+kisstkondoros.vscode-gutter-preview
 mechatroner.rainbow-csv
 mkxml.vscode-filesize
 ms-azuretools.vscode-docker
@@ -22,6 +23,7 @@ ms-vscode.live-server
 ms-vscode.remote-explorer
 ms-vscode.remote-repositories
 oderwat.indent-rainbow
+pflannery.vscode-versionlens
 Remisa.shellman
 sswg.swift-lang
 streetsidesoftware.code-spell-checker
