@@ -125,8 +125,6 @@ repoinfo() {
   if git rev-parse --show-toplevel >/dev/null 2>&1; then
     echo -e "$WB ··> Name:$YB $(basename "$(pwd)")$RESET"
     echo -e "$WB ··> Branch:$YB $(gitbranch)$RESET"
-    echo -e "$WB ··> Current changes:$RESET"
-    git status -s
     REGEX='^[0-9]+$'
     if [[ $# -eq 0 ]]; then
       echo -e "$WB ··> Last 5 commits:$RESET"
@@ -139,6 +137,10 @@ repoinfo() {
       echo -e "$WB ··> Last 5 commits:$RESET"
       git log -n 5 --oneline
     fi
+    echo -e "$WB ··> Stashed changes:$RESET"
+    git stash list
+    echo -e "$WB ··> Current changes:$RESET"
+    git status -s
     echo
   else
     echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
