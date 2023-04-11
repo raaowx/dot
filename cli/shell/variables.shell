@@ -41,6 +41,7 @@ export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export COMPLETIONS_ROOT="$HOME/.completions"
 export NVM_ROOT="$HOME/.nvm"
+export DOCKER_ROOT="$HOME/.docker/bin"
 # PATH
 export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
@@ -50,6 +51,7 @@ export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
 export PATH="$PATH:$COMPLETIONS_ROOT"
 export PATH="$PATH:$NVM_ROOT"
+export PATH="$PATH:$DOCKER_ROOT"
 # STDOUT
 export CLICOLOR=1
 export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
