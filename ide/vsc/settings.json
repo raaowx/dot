@@ -91,5 +91,6 @@
     "workbench.welcomePage.walkthroughs.openOnInstall": false,
     "zenMode.hideActivityBar": false,
     "zenMode.hideStatusBar": false,
-    "zenMode.hideTabs": false
+    "zenMode.hideTabs": false,
+    "workbench.colorTheme": "Default Dark+"
 }
