@@ -39,6 +39,7 @@
     "files.hotExit": "onExitAndWindowClose",
     "indentRainbow.indicatorStyle": "light",
     "indentRainbow.lightIndicatorStyleLineWidth": 5,
+    "lldb.launch.expressions": "native",
     "lldb.library": "/Library/Developer/CommandLineTools/Library/PrivateFrameworks/LLDB.framework/Versions/A/LLDB",
     "problems.showCurrentInStatus": true,
     "search.searchEditor.defaultNumberOfContextLines": 3,
@@ -77,6 +78,7 @@
         "terminal.background": "#333333",
         "terminal.foreground": "#00C800"
     },
+    "workbench.colorTheme": "Default Dark+",
     "workbench.editor.closeOnFileDelete": true,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editor.openPositioning": "last",
@@ -91,6 +93,5 @@
     "workbench.welcomePage.walkthroughs.openOnInstall": false,
     "zenMode.hideActivityBar": false,
     "zenMode.hideStatusBar": false,
-    "zenMode.hideTabs": false,
-    "workbench.colorTheme": "Default Dark+"
+    "zenMode.hideTabs": false
 }
