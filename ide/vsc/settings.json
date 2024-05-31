@@ -43,7 +43,7 @@
     "indentRainbow.indicatorStyle": "light",
     "indentRainbow.lightIndicatorStyleLineWidth": 5,
     "lldb.launch.expressions": "native",
-    "lldb.library": "/Library/Developer/CommandLineTools/Library/PrivateFrameworks/LLDB.framework/Versions/A/LLDB",
+    "lldb.library": "/Applications/Xcode.app/Contents/SharedFrameworks/LLDB.framework/Versions/A/LLDB",
     "problems.showCurrentInStatus": true,
     "search.searchEditor.defaultNumberOfContextLines": 3,
     "search.searchEditor.doubleClickBehaviour": "openLocationToSide",
