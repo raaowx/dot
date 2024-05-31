@@ -4,6 +4,7 @@ aprilandjan.ascii-tree-generator
 bierner.markdown-checkbox
 bierner.markdown-emoji
 bierner.markdown-preview-github-styles
+codeium.codeium
 davidanson.vscode-markdownlint
 dbaeumer.vscode-eslint
 dnicolson.binary-plist
