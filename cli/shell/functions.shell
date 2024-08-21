@@ -127,15 +127,15 @@ repoinfo() {
     echo -e "$WB ··> Branch:$YB $(gitbranch)$RESET"
     REGEX='^[0-9]+$'
     if [[ $# -eq 0 ]]; then
-      echo -e "$WB ··> Last 5 commits:$RESET"
-      git log -n 5 --oneline
+      echo -e "$WB ··> Last 7 commits:$RESET"
+      git log -n 7 --oneline
     elif [[ $# -eq 1 ]] && [[ $1 =~ $REGEX ]] && [[ $1 -gt 0 ]]; then
       echo -e "$WB ··> Last $1 commits:$RESET"
       git log -n "$1" --oneline
     else
       echo -e "\n$RB [ERROR] Remember to use only one positive integer as parameter$RESET\n"
-      echo -e "$WB ··> Last 5 commits:$RESET"
-      git log -n 5 --oneline
+      echo -e "$WB ··> Last 3 commits:$RESET"
+      git log -n 3 --oneline
     fi
     echo -e "$WB ··> Stashed changes:$RESET"
     git stash list
