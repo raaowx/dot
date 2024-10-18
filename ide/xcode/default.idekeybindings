@@ -8,9 +8,301 @@
 		<array>
 			<dict>
 				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.AcceptSuggestionCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>~	</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Accept Suggestion</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.GetSuggestionsCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Get Suggestions</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.NextSuggestionCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>~</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Next Suggestion</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.OpenChatCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Open Chat</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.PrefetchSuggestionsCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Prefetch Suggestions</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.PreviousSuggestionCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Previous Suggestion</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.RealtimeSuggestionsCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Prepare for Real-time Suggestions</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.RejectSuggestionCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>~</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Reject Suggestion</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.SeparatorCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>------</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCopilot.ToggleRealtimeSuggestionsCommand</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Toggle Real-time Suggestions</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCustomCommandBuiltInCustomCommandAddDocumentationToSelection</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Add Documentation to Selection</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCustomCommandBuiltInCustomCommandExplainSelection</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Explain Selection</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>_invokeSourceEditorExtensionCommand:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandID</key>
+				<string>IDESourceEditorExtension:com.intii.CodeiumForXcode.EditorExtension,IDESourceEditorExtensionCommand:com.intii.CodeiumForXcode.EditorExtensionCustomCommandBuiltInCustomCommandSendCodeToChat</string>
+				<key>Group</key>
+				<string>Editor Menu for Source Code</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEPegasusSourceEditor.MenuDefinition.Editor</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>Codeium</string>
+				<key>Title</key>
+				<string>Send Selected Code to Chat</string>
+			</dict>
+			<dict>
+				<key>Action</key>
+				<string>newFolder:</string>
+				<key>Alternate</key>
+				<string>NO</string>
+				<key>CommandGroupID</key>
+				<string>IDENewGrouping</string>
+				<key>CommandID</key>
+				<string>Xcode.IDEKit.CmdDefinition.NewFolder</string>
+				<key>Group</key>
+				<string>File Menu</string>
+				<key>GroupID</key>
+				<string>Xcode.IDEKit.MenuDefinition.Main</string>
+				<key>GroupedAlternate</key>
+				<string>NO</string>
+				<key>Keyboard Shortcut</key>
+				<string>~@n</string>
+				<key>Navigation</key>
+				<string>NO</string>
+				<key>Parent Title</key>
+				<string>New</string>
+				<key>Title</key>
+				<string>Folder</string>
+			</dict>
+			<dict>
+				<key>Action</key>
 				<string>toggleBreakpointAtCurrentLine:</string>
 				<key>Alternate</key>
 				<string>NO</string>
+				<key>CommandGroupID</key>
+				<string>Xcode.IDEKit.CmdDefinition.ToggleBreakpointAtCurrentLine</string>
 				<key>CommandID</key>
 				<string>Xcode.IDEKit.CmdDefinition.ToggleBreakpointAtCurrentLine</string>
 				<key>Group</key>
@@ -64,7 +356,7 @@
 				<key>Group</key>
 				<string>Editor Menu for Playground</string>
 				<key>GroupID</key>
-				<string>Xcode.IDEPegasusPlaygroundEditor.MenuDefinition.Editor</string>
+				<string>Xcode.IDEPlaygroundEditor.MenuDefinition.Editor</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
 				<key>Keyboard Shortcut</key>
@@ -136,7 +428,7 @@
 				<key>Group</key>
 				<string>Editor Menu for Playground</string>
 				<key>GroupID</key>
-				<string>Xcode.IDEPegasusPlaygroundEditor.MenuDefinition.Editor</string>
+				<string>Xcode.IDEPlaygroundEditor.MenuDefinition.Editor</string>
 				<key>GroupedAlternate</key>
 				<string>NO</string>
 				<key>Keyboard Shortcut</key>
@@ -189,10 +481,20 @@
 				<string>moveWordForwardAndModifySelection:</string>
 				<string>moveSubWordForward:</string>
 				<string>moveSubWordBackward:</string>
+				<array>
+					<string>moveBackward:</string>
+					<string>moveToBeginningOfParagraph:</string>
+				</array>
 				<string>moveWordBackward:</string>
+				<array>
+					<string>moveForward:</string>
+					<string>moveToEndOfParagraph:</string>
+				</array>
 				<string>moveWordForward:</string>
 				<string>moveSubWordBackwardAndModifySelection:</string>
 			</array>
+			<key>~$</key>
+			<string>insertTabIgnoringFieldEditor:</string>
 			<key></key>
 			<string>moveUp:</string>
 			<key></key>
