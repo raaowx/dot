@@ -10,6 +10,7 @@
     "debug.console.fontSize": 14,
     "diffEditor.codeLens": true,
     "diffEditor.ignoreTrimWhitespace": false,
+    "diffEditor.renderSideBySide": true,
     "editor.acceptSuggestionOnEnter": "off",
     "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorStyle": "block",
@@ -94,8 +95,5 @@
     "workbench.iconTheme": "vscode-icons",
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.view.alwaysShowHeaderActions": true,
-    "workbench.welcomePage.walkthroughs.openOnInstall": false,
-    "zenMode.hideActivityBar": false,
-    "zenMode.hideStatusBar": false,
-    "zenMode.hideTabs": false
+    "workbench.welcomePage.walkthroughs.openOnInstall": false
 }
