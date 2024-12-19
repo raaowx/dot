@@ -63,17 +63,8 @@ hosts() {
 # J
 # K
 # L
-lanconfig() {
-  for ip in $(ifconfig | grep -Eo "(10|127)(\.[0-9]{1,3}){3}|172(\.[1-3]{1}[0-9]{1})(\.[0-9]{1,3}){2}|192\.168(\.[0-9]{1,3}){2}" ); do
-    echo -e "$WB LAN IP:$YB $ip $RESET"
-  done
-}
 # M
 # N
-netconfig() {
-  lanconfig
-  wanconfig
-}
 nix2dos() {
   FILE=$(basename "$1")
   NAME="${FILE%.*}"
@@ -167,9 +158,6 @@ update_terminal_cwd() {
 }
 # V
 # W
-wanconfig() {
-  echo -e "$WB WAN IP:$YB $(curl --connect-timeout 10 -f -s -L ident.me)$RESET"
-}
 weather() {
   CITY="${*//\ /%20}"
   curl --connect-timeout 10 -f -s -L "wttr.in/$CITY"
