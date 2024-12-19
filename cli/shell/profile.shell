@@ -23,12 +23,12 @@ esac
 # PROMPT
 case "${INTERPRETER}" in
 "bash")
-	export PS1='\[$W\][\D{%a %d.%m.%Y} - \t] ~ \[$Y\]\!\[$W\] ~ \[$RB\]#\#\n\[$WB\]··> $(amibox-prompt)\[$WB\]\h$(amibox-prompt)\[$WB\] { \j } <·· \[$W\][\[$CB\]\u\[$W\]] \[$MB\]\W\[$RESET\] \[$B\]$(gitbranch)\[$RESET\]\$ '
+	export PS1='\[$W\][\D{%a %d.%m.%Y} - \t] ~ \[$Y\]\!\[$W\] ~ \[$RB\]#\#\n\[$WB\]··> \[$WB\]\h\[$WB\] { \j } <·· \[$W\][\[$CB\]\u\[$W\]] \[$MB\]\W\[$RESET\] \[$B\]$(gitbranch)\[$RESET\]\$ '
 	export PS2='\[$R\]··>\[$RESET\] '
 	export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
 	;;
 "zsh")
-	export PS1='%F{7}[%D{%a %d.%m.%Y - %H:%M:%S}]$NEWLINE%F{15}··> $(amibox-prompt)%F{15}%m$(amibox-prompt)%F{15} { %j } <·· %F{7}[%F{14}%n%F{7}] %F{13}%1~%f %F{0}$(gitbranch)%f%# '
+	export PS1='%F{7}[%D{%a %d.%m.%Y - %H:%M:%S}]$NEWLINE%F{15}··> %F{15}%m%F{15} { %j } <·· %F{7}[%F{14}%n%F{7}] %F{13}%1~%f %F{0}$(gitbranch)%f%# '
 	export RPS1='%F{3}%!%F{7} ~ %(?.%F{10}√%f.%F{9}%?%f)'
 	export PS2='%F{1}··>%f '
 	export RPS2='%F{1}<··%f'
