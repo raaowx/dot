@@ -74,23 +74,6 @@ nix2dos() {
 # P
 # Q
 # R
-random-password() {
-  REGEX='^[0-9]+$'
-  OPTIONS=(8 16 32 64 128 256 512)
-  if [[ $# -eq 0 ]]; then
-    echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
-  elif [[ $# -eq 1 ]] && [[ $1 =~ $REGEX ]]; then
-    if [[ " ${OPTIONS[*]} " =~ ${1} ]]; then
-      echo -e "$WB ··> Random password with $1 bytes:$YB $(openssl rand "$1" | openssl base64 -a)$RESET"
-    else
-      echo -e "\n$RB [ERROR] Remember to use one of the following positive integers as parameter: ${OPTIONS[*]} $RESET\n"
-      echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
-    fi
-  else
-    echo -e "\n$RB [ERROR] Remember to use only one positive integer as parameter$RESET\n"
-    echo -e "$WB ··> Random password with 16 bytes:$YB $(openssl rand 16 | openssl base64 -A)$RESET"
-  fi
-}
 reload-shell() {
   clear
   case "${INTERPRETER}" in
