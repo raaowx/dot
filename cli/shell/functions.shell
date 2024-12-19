@@ -7,14 +7,6 @@ add-space-to-dock() {
   sleep 3
   open -a Dock
 }
-amibox() {
-  hostname | grep -Eq '(B|b)(O|o)(X|x)'
-}
-amibox-prompt() {
-  if amibox; then
-    echo -e "$RB·$RESET"
-  fi
-}
 # B
 # C
 cleanup-history() {
