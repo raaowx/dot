@@ -41,6 +41,7 @@
     },
     "files.autoSave": "onWindowChange",
     "files.hotExit": "onExitAndWindowClose",
+    "git.replaceTagsWhenPull": true,
     "indentRainbow.indicatorStyle": "light",
     "indentRainbow.lightIndicatorStyleLineWidth": 5,
     "lldb.launch.expressions": "native",
