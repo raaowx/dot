@@ -12,11 +12,9 @@ esbenp.prettier-vscode
 foxundermoon.shell-format
 github.remotehub
 gruntfuggly.todo-tree
-hediet.vscode-drawio
 kisstkondoros.vscode-gutter-preview
 mechatroner.rainbow-csv
 mkxml.vscode-filesize
-ms-azuretools.vscode-docker
 ms-vscode-remote.remote-ssh
 ms-vscode-remote.remote-ssh-edit
 ms-vscode.live-server
@@ -25,9 +23,9 @@ ms-vscode.remote-repositories
 oderwat.indent-rainbow
 pflannery.vscode-versionlens
 remisa.shellman
-sswg.swift-lang
 streetsidesoftware.code-spell-checker
 streetsidesoftware.code-spell-checker-spanish
+swiftlang.swift-vscode
 timonwong.shellcheck
 tomoki1207.pdf
 usernamehw.errorlens
