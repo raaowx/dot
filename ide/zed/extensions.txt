@@ -1,0 +1,3 @@
+HTML;https://github.com/zed-industries/zed
+Swift;https://github.com/zed-extensions/swift
+Synthwave '84 Theme;https://github.com/DanielMSchmidt/zed-synthwave
