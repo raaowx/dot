@@ -7,18 +7,37 @@
 // custom settings, run `zed: open default settings` from the
 // command palette (cmd-shift-p / ctrl-shift-p)
 {
-  "ui_font_size": 14,
-  "ui_font_family": "SF Pro",
-  "buffer_font_size": 14,
+  "telemetry": {
+    "diagnostics": false,
+    "metrics": false
+  },
+  "auto_install_extensions": {},
+  "restore_on_startup": "none",
+  "auto_update": false,
   "buffer_font_family": "SF Mono",
+  "buffer_font_size": 14,
+  "cursor_shape": "block",
+  "tabs": {
+    "file_icons": true,
+    "git_status": true,
+    "always_show_close_button": true
+  },
+  "preferred_line_length": 120,
+  "soft_wrap": "editor_width",
+  "wrap_guides": [120],
+  "terminal": {
+    "blinking": "on",
+    "font_size": 14,
+    "font_family": "Menlo"
+  },
   "theme": {
     "mode": "dark",
     "light": "One Light",
     "dark": "SynthWave 84 Dark"
   },
-  "terminal": {
-    "blinking": "on",
-    "font_size": 14,
-    "font_family": "Menlo"
+  "ui_font_family": "SF Pro",
+  "ui_font_size": 14,
+  "features": {
+    "edit_prediction_provider": "none"
   }
 }
