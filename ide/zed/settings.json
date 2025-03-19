@@ -20,7 +20,7 @@
   "tabs": {
     "file_icons": true,
     "git_status": true,
-    "always_show_close_button": true
+    "show_close_button": "always"
   },
   "preferred_line_length": 120,
   "soft_wrap": "editor_width",
