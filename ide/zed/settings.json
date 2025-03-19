@@ -39,5 +39,10 @@
   "ui_font_size": 14,
   "features": {
     "edit_prediction_provider": "none"
+  },
+  "git": {
+    "inline_blame": {
+      "show_commit_summary": true
+    }
   }
 }
