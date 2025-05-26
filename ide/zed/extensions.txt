@@ -1,3 +1,4 @@
+colored-zed-icons-theme
 csv
 html
 rainbow-csv
