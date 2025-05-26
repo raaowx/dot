@@ -44,5 +44,6 @@
     "inline_blame": {
       "show_commit_summary": true
     }
-  }
+  },
+  "icon_theme": "Colored Zed Icons Theme Dark"
 }
