@@ -9,11 +9,11 @@ This repository has been created for store and backup all configurations of my d
   * [Shell](./cli/shell)
   * [ZSH](./cli/zsh)
 * [IDE](./ide/)
+  * [Cursor](./ide/cursor)
   * [Nano](./ide/nano)
-  * [VSC (*VSCode & VSCodium*)](./ide/vsc)
   * [XCode](./ide/xcode)
+  * [Zed](./ide/zed)
 * [Terminal](./terminal/)
-  * [iTerm2](./terminal/iterm2)
   * [MacOS](./terminal/macos)
 * [Tools](./tools/)
   * [Git](./tools/git)
@@ -24,4 +24,4 @@ This repository has been created for store and backup all configurations of my d
 
 All configuration files are under the same [MIT License](./LICENSE.txt).  
 
-Copyright © 2023 **Álvaro López de Diego {raaowx}** <raaowx@protonmail.com>
+Copyright © 2021-2025 **Álvaro López de Diego {raaowx}** <raaowx@protonmail.com>
