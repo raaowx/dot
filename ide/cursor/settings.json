@@ -7,6 +7,9 @@
     "cSpell.userWords": [
         "raaowx"
     ],
+    "cursor.composer.queueMessageDefaultBehavior": "queue",
+    "cursor.composer.shouldChimeAfterChatFinishes": true,
+    "cursor.cpp.enablePartialAccepts": true,
     "debug.console.fontSize": 14,
     "diffEditor.codeLens": true,
     "diffEditor.ignoreTrimWhitespace": false,
@@ -83,7 +86,7 @@
         "terminal.background": "#333333",
         "terminal.foreground": "#00C800"
     },
-    "workbench.colorTheme": "Xcode Classic Light",
+    "workbench.colorTheme": "SynthWave '84",
     "workbench.editor.closeOnFileDelete": true,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editor.openPositioning": "last",
