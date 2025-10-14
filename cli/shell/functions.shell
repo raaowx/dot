@@ -141,10 +141,6 @@ update_terminal_cwd() {
 }
 # V
 # W
-weather() {
-  CITY="${*//\ /%20}"
-  curl --connect-timeout 10 -f -s -L "wttr.in/$CITY"
-}
 # X
 # Y
 # Z
