@@ -86,7 +86,7 @@
         "terminal.background": "#333333",
         "terminal.foreground": "#00C800"
     },
-    "workbench.colorTheme": "SynthWave '84",
+    "workbench.colorTheme": "Tokyo Night",
     "workbench.editor.closeOnFileDelete": true,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editor.openPositioning": "last",

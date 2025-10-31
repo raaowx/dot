@@ -4,6 +4,7 @@ alefragnani.bookmarks
 christian-kohler.path-intellisense
 davidanson.vscode-markdownlint
 dotjoshjohnson.xml
+enkia.tokyo-night
 esbenp.prettier-vscode
 foxundermoon.shell-format
 gruntfuggly.todo-tree
