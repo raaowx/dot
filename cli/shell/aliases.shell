@@ -18,7 +18,7 @@ alias grep='grep --color=auto'
 # L
 ## Alias 'll' description
 #     a = All files including hidden
-#     h = Human readeable file/folder size
+#     h = Human readable file/folder size
 #     l = Long list format
 #     p = Write '/' at the end of folders name
 alias ll='ls -ahlp'
