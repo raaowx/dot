@@ -12,7 +12,7 @@ case "${INTERPRETER}" in
 "zsh")
 	setopt AUTO_CD       # Perform 'cd' if argument in stdin is a directory instead of a command
 	setopt NO_CASE_GLOB  # Autocompletion will be case insensitive
-	setopt GLOB_COMPLETE # Create a cyclable menu with all autocomplete matches
+	setopt GLOB_COMPLETE # Show a menu of possible matches when completing with wildcards (TAB to cycle through options)
 	setopt PROMPT_SUBST  # Enable prompt function execution capabilities
 	# Shellcheck doesn't support linting over ZSH instructions
 	# https://github.com/koalaman/shellcheck/issues/809
