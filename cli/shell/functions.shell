@@ -47,7 +47,7 @@ gitignore() {
   if [ ! -f "$FILE" ]; then
     echo -e "\n$RB [ERROR] Unable to create '$FILE' file$RESET\n"
     echo -e "$WB You can check if your parameters are valid by performing:"
-    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"toptal.com/developers/gitignore/api/list\" | grep -o \"\w*%PARAMATER%\w*\"$WB <<$RESET\n"
+    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"toptal.com/developers/gitignore/api/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$WB <<$RESET\n"
   fi
 }
 # H
