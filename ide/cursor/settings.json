@@ -16,7 +16,6 @@
     "diffEditor.renderSideBySide": true,
     "editor.acceptSuggestionOnEnter": "off",
     "editor.cursorSmoothCaretAnimation": "on",
-    "editor.cursorStyle": "block",
     "editor.fontFamily": "'Fira Code', Menlo, Monaco, monospace",
     "editor.fontLigatures": true,
     "editor.fontSize": 14,
@@ -27,6 +26,7 @@
     "editor.gotoLocation.alternativeTypeDefinitionCommand": "",
     "editor.minimap.enabled": true,
     "editor.minimap.scale": 2,
+    "editor.minimap.sectionHeaderFontSize": 14,
     "editor.minimap.size": "fill",
     "editor.multiCursorModifier": "ctrlCmd",
     "editor.suggest.insertMode": "replace",
@@ -82,11 +82,12 @@
     "window.newWindowDimensions": "inherit",
     "window.restoreFullscreen": true,
     "window.restoreWindows": "none",
+    "window.zoomLevel": 0.3,
     "workbench.colorCustomizations": {
         "terminal.background": "#333333",
         "terminal.foreground": "#00C800"
     },
-    "workbench.colorTheme": "Tokyo Night",
+    "workbench.colorTheme": "Tokyo Night Storm",
     "workbench.editor.closeOnFileDelete": true,
     "workbench.editor.highlightModifiedTabs": true,
     "workbench.editor.openPositioning": "last",
@@ -97,6 +98,8 @@
     "workbench.editor.untitled.labelFormat": "name",
     "workbench.enableExperiments": false,
     "workbench.iconTheme": "vscode-icons",
+    "workbench.preferredDarkColorTheme": "Tokyo Night Storm",
+    "workbench.preferredLightColorTheme": "Tokyo Night Light",
     "workbench.settings.enableNaturalLanguageSearch": false,
     "workbench.view.alwaysShowHeaderActions": true,
     "workbench.welcomePage.walkthroughs.openOnInstall": false
