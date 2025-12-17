@@ -55,9 +55,6 @@ export PATH="$PATH:$DOCKER_ROOT"
 # STDOUT
 export CLICOLOR=1
 export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
-# EDITOR & TOOLS
-export EDITOR=nano
-export LESSHISTFILE="-"
 # COLOURS - Will be used in other files
 # shellcheck disable=SC2034
 B=$(tput setaf 0) # BLACK
@@ -93,3 +90,7 @@ W=$(tput setaf 7) # WHITE
 WB=$(tput setaf 15) # BOLD WHITE
 # shellcheck disable=SC2034
 RESET=$(tput sgr0) # RESET
+# EDITOR & TOOLS
+export EDITOR=nano
+export LESSHISTFILE="-"
+export TLDR_AUTO_UPDATE_DISABLED=1
