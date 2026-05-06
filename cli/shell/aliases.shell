@@ -24,7 +24,6 @@ alias grep='grep --color=auto'
 alias ll='ls -ahlp'
 # M
 # N
-alias neofetch='neofetch --config "$HOME/.neofetch"'
 # O
 # P
 # Q
