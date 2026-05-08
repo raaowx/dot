@@ -33,19 +33,23 @@ else
 fi
 # DIRECTORIES - HOME
 export BREW_HOME="/opt/homebrew"
-export GEM_HOME="$HOME/.local/share/gem"
+export GEM_SYSTEM_HOME="$HOME/.local/share/gem"
+export GEM_BREW_HOME="$BREW_HOME/lib/ruby/gems/4.0.0"
 # DIRECTORIES - ROOT (EXEC)
 export BREW_ROOT="$BREW_HOME/bin"
-export GEM_ROOT="$GEM_HOME/bin"
+export RUBY_ROOT="$BREW_HOME/opt/ruby/bin"
+export GEM_SYSTEM_ROOT="$GEM_SYSTEM_HOME/bin"
+export GEM_BREW_ROOT="$GEM_BREW_HOME/bin"
 export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export COMPLETIONS_ROOT="$HOME/.completions"
 export NVM_ROOT="$HOME/.nvm"
 export DOCKER_ROOT="$HOME/.docker/bin"
 # PATH
-export PATH="/usr/local/sbin:$PATH"
 export PATH="/usr/local/bin:$PATH"
-export PATH="$GEM_ROOT:$PATH"
+export PATH="/usr/local/sbin:$PATH"
+export PATH="$GEM_BREW_ROOT:$GEM_SYSTEM_ROOT:$PATH"
+export PATH="$RUBY_ROOT:$PATH"
 export PATH="$BREW_ROOT:$PATH"
 export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
