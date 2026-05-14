@@ -1,8 +1,0 @@
-colored-zed-icons-theme
-csv
-html
-rainbow-csv
-ruby
-sql
-swift
-synthwave
