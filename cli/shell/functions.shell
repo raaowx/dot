@@ -20,6 +20,116 @@ cleanup-history() {
     ;;
   esac
 }
+cleanup-app-associated-files() {
+  if [ $# -eq 0 ]; then
+    echo -e "\n$RB [ERROR] Usage: cleanup-app-associated-files <app_name>$RESET\n"
+    return 1
+  fi
+
+  local app_name="$*"
+  local fd_bin
+  fd_bin="$(command -v fd)"
+
+  echo -e "\n$WB ··> Elevated permissions are required to search and delete protected directories.$RESET"
+  sudo -v || { echo -e "\n$RB [ERROR] Authentication failed$RESET\n"; return 1; }
+
+  # Directories excluded from the search — add or remove entries as needed
+  local -a excluded_dirs=(
+    "/Volumes"
+    "/System"
+    "/dev"
+    "/cores"
+    "/bin"
+    "/sbin"
+    "/home"
+    "/net"
+  )
+
+  # Build grep exclusion regex from the array above
+  local joined exclude_regex
+  joined=$(printf '%s|' "${excluded_dirs[@]}"); joined="${joined%|}"
+  exclude_regex="^(${joined})(/|\$)"
+
+  # Build fd search pattern: lowercase, spaces become .* (any separator, any length)
+  local pattern
+  pattern=$(printf '%s' "$app_name" | tr '[:upper:]' '[:lower:]' | sed 's/ /.*/g')
+
+  echo -e "$WB ··> Searching for residuals of '$YB$app_name$WB'...$RESET"
+
+  # Two fd passes: directories first (sorted shallow to deep), then files
+  local -a dirs=() files=()
+
+  while IFS= read -r line; do
+    dirs+=("$line")
+  done < <(
+    sudo "$fd_bin" --hidden --ignore-case -t d "$pattern" / 2>/dev/null \
+      | grep -vE "$exclude_regex" \
+      | awk '{ s=$0; gsub(/[^\/]/,"",s); print length(s) "\t" $0 }' \
+      | sort -n \
+      | cut -f2-
+  )
+
+  while IFS= read -r line; do
+    files+=("$line")
+  done < <(
+    sudo "$fd_bin" --hidden --ignore-case -t f "$pattern" / 2>/dev/null \
+      | grep -vE "$exclude_regex"
+  )
+
+  local total=$(( ${#dirs[@]} + ${#files[@]} ))
+
+  if [ "$total" -eq 0 ]; then
+    echo -e "$WB ··> No residuals found for '$YB$app_name$WB'$RESET\n"
+    return 0
+  fi
+
+  echo -e "$WB ··> Found$YB $total$WB potential residuals ($YB${#dirs[@]}$WB directories,$YB ${#files[@]}$WB files)$RESET\n"
+
+  local -a deleted_paths=()
+  local deleted_dirs=0 deleted_files=0 skipped=0
+  local is_child answer
+
+  for dir in "${dirs[@]}"; do
+    [ -e "$dir" ] || { skipped=$(( skipped + 1 )); continue; }
+    is_child=0
+    for deleted in "${deleted_paths[@]}"; do
+      [[ "$dir" == "$deleted"/* ]] && { is_child=1; break; }
+    done
+    [ "$is_child" -eq 1 ] && { skipped=$(( skipped + 1 )); continue; }
+
+    echo -e "$WB ··>$YB [DIR]$WB  $dir$RESET"
+    printf "  Delete? [y/n]: "
+    read -r answer
+    echo
+    if [[ "$answer" == "y" ]]; then
+      sudo rm -rf "$dir"
+      deleted_paths+=("$dir")
+      deleted_dirs=$(( deleted_dirs + 1 ))
+    fi
+  done
+
+  for file in "${files[@]}"; do
+    [ -e "$file" ] || { skipped=$(( skipped + 1 )); continue; }
+    is_child=0
+    for deleted in "${deleted_paths[@]}"; do
+      [[ "$file" == "$deleted"/* ]] && { is_child=1; break; }
+    done
+    [ "$is_child" -eq 1 ] && { skipped=$(( skipped + 1 )); continue; }
+
+    echo -e "$WB ··>$YB [FILE]$WB $file$RESET"
+    printf "  Delete? [y/n]: "
+    read -r answer
+    echo
+    if [[ "$answer" == "y" ]]; then
+      sudo rm "$file"
+      deleted_paths+=("$file")
+      deleted_files=$(( deleted_files + 1 ))
+    fi
+  done
+
+  local total_deleted=$(( deleted_dirs + deleted_files ))
+  echo -e "$WB ··> Done.$YB $total_deleted$WB deleted ($YB$deleted_dirs$WB directories,$YB $deleted_files$WB files).$YB $skipped$WB auto-skipped$RESET\n"
+}
 # D
 dos2nix() {
   FILE=$(basename "$1")
