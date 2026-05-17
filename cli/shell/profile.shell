@@ -109,9 +109,8 @@ case "${INTERPRETER}" in
 	fi
 	;;
 "zsh")
-	autoload bashcompinit && bashcompinit
-	# LOAD ZSH COMPLETION
-	echo -e "$CB   ··>$MB zsh $RESET"
+	# LOAD COMPLETION STYLES
+	echo -e "$CB   ··>$MB completion styles $RESET"
 	zstyle ':completion:*' completer _expand _complete _ignored _approximate
 	# Shellcheck doesn't support linting over ZSH instructions
 	# https://github.com/koalaman/shellcheck/issues/809
@@ -159,7 +158,21 @@ case "${INTERPRETER}" in
 		echo -e "$CB   ··>$MB brew $RESET"
 		FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
 	fi
-	autoload -Uz compinit && compinit
+	# LOAD ZSH COMPLETION
+	echo -e "$CB   ··>$MB zsh $RESET"
+	autoload -Uz compinit
+	if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+12) ]]; then
+		compinit
+	else
+		compinit -C
+		local _insecure
+		_insecure=$(compaudit 2>/dev/null)
+		if [[ -n "$_insecure" ]]; then
+			echo "compinit: insecure files/directories:"
+			echo "$_insecure"
+		fi
+	fi
+	autoload bashcompinit && bashcompinit
 	;;
 esac
 

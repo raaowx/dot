@@ -1,7 +1,11 @@
 # shellcheck shell=bash
 # === === === SHELL VARIABLES === === === #
 # MAIN VARIABLES
-INTERPRETER=$(ps -c -o command= -p$$ | tr -d "-")
+if [[ -n "$ZSH_VERSION" ]]; then
+	INTERPRETER="zsh"
+elif [[ -n "$BASH_VERSION" ]]; then
+	INTERPRETER="bash"
+fi
 declare INTERPRETER_VERSION
 declare NEWLINE
 case "${INTERPRETER}" in
@@ -18,7 +22,7 @@ esac
 export LANG="en_GB.UTF-8"
 if hostname | grep -Eq '(B|b)(O|o)(X|x)'; then
 	export LC_ALL="en_GB.UTF-8"
-else 
+else
 	export LC_ADDRESS="es_ES.UTF-8"
 	export LC_COLLATE="en_GB.UTF-8"
 	export LC_CTYPE="es_ES.UTF-8"
@@ -61,39 +65,39 @@ export CLICOLOR=1
 export LSCOLORS=GxFxAxExBxdxDxBxBxGxGx
 # COLOURS - Will be used in other files
 # shellcheck disable=SC2034
-B=$(tput setaf 0) # BLACK
+B=$'\033[30m'    # BLACK
 # shellcheck disable=SC2034
-BB=$(tput setaf 8) # BOLD BLACK
+BB=$'\033[90m'   # BRIGHT BLACK
 # shellcheck disable=SC2034
-R=$(tput setaf 1) # RED
+R=$'\033[31m'    # RED
 # shellcheck disable=SC2034
-RB=$(tput setaf 9) # BOLD RED
+RB=$'\033[91m'   # BRIGHT RED
 # shellcheck disable=SC2034
-G=$(tput setaf 2) # GREEN
+G=$'\033[32m'    # GREEN
 # shellcheck disable=SC2034
-GB=$(tput setaf 10) # BOLD GREEN
+GB=$'\033[92m'   # BRIGHT GREEN
 # shellcheck disable=SC2034
-Y=$(tput setaf 3) # YELLOW
+Y=$'\033[33m'    # YELLOW
 # shellcheck disable=SC2034
-YB=$(tput setaf 11) # BOLD YELLOW
+YB=$'\033[93m'   # BRIGHT YELLOW
 # shellcheck disable=SC2034
-A=$(tput setaf 4) # BLUE
+A=$'\033[34m'    # BLUE
 # shellcheck disable=SC2034
-AB=$(tput setaf 12) # BOLD BLUE
+AB=$'\033[94m'   # BRIGHT BLUE
 # shellcheck disable=SC2034
-M=$(tput setaf 5) # MAGENTA
+M=$'\033[35m'    # MAGENTA
 # shellcheck disable=SC2034
-MB=$(tput setaf 13) # BOLD MAGENTA
+MB=$'\033[95m'   # BRIGHT MAGENTA
 # shellcheck disable=SC2034
-C=$(tput setaf 6) # CYAN
+C=$'\033[36m'    # CYAN
 # shellcheck disable=SC2034
-CB=$(tput setaf 14) # BOLD CYAN
+CB=$'\033[96m'   # BRIGHT CYAN
 # shellcheck disable=SC2034
-W=$(tput setaf 7) # WHITE
+W=$'\033[37m'    # WHITE
 # shellcheck disable=SC2034
-WB=$(tput setaf 15) # BOLD WHITE
+WB=$'\033[97m'   # BRIGHT WHITE
 # shellcheck disable=SC2034
-RESET=$(tput sgr0) # RESET
+RESET=$'\033[0m' # RESET
 # EDITOR & TOOLS
 export EDITOR=nano
 export LESSHISTFILE="-"

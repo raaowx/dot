@@ -267,6 +267,7 @@ reload-shell() {
     source "$HOME/.bash_profile"
     ;;
   "zsh")
+    rm -f "${ZDOTDIR:-$HOME}/.zcompdump"*
     # shellcheck source=../zsh/profile.zsh
     source "$HOME/.zsh_profile"
     ;;
@@ -302,7 +303,7 @@ static-webserver() {
   SWS_DIR="./"
   if ! which python3 > /dev/null; then
     echo -e "\n$RB [ERROR] Python v3.X wasn't found in the OS$RESET\n"
-    exit 1 
+    exit 1
   fi
   if [ "$#" -gt 0 ] && [ ! -d "$1" ]; then
     echo -e "\n$RB [ERROR] The parameter '$1' is not a directory, ignoring...$RESET\n"
