@@ -140,7 +140,10 @@ dos2nix() {
 # F
 # G
 gitbranch() {
-  git branch 2> /dev/null | sed -e '/^[^*]/d' -e 's/* \(.*\)/{ \1 }\ /'
+  local branch
+  branch=$(git symbolic-ref --short HEAD 2>/dev/null) || \
+  branch=$(git rev-parse --short HEAD 2>/dev/null) && \
+  printf '{ %s } ' "$branch"
 }
 gitignore() {
   PARAM="linux,macos,windows"
@@ -163,7 +166,7 @@ gitignore() {
 # H
 hosts() {
   HOSTS="/etc/hosts"
-  if which bat &> /dev/null; then
+  if command -v bat > /dev/null 2>&1; then
     bat $HOSTS
   else
     cat $HOSTS
@@ -301,7 +304,7 @@ repoinfo() {
 # S
 static-webserver() {
   SWS_DIR="./"
-  if ! which python3 > /dev/null; then
+  if ! command -v python3 > /dev/null 2>&1; then
     echo -e "\n$RB [ERROR] Python v3.X wasn't found in the OS$RESET\n"
     exit 1
   fi
