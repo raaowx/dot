@@ -1,0 +1,4 @@
+colored-zed-icons-theme
+git-firefly
+html
+tokyo-night
