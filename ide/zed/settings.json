@@ -120,6 +120,9 @@
         "modal_max_width": "small",
         "skip_focus_for_active_in_search": true,
     },
+    "file_types": {
+        "Shell Script": ["shell"],
+    },
     "focus_follows_mouse": {
         "debounce_ms": 250,
         "enabled": false,
@@ -399,7 +402,7 @@
         "working_directory": "current_project_directory",
     },
     "text_rendering_mode": "grayscale",
-    "theme": "Ayu Mirage",
+    "theme": "Tokyo Night",
     "title_bar": {
         "button_layout": "standard",
         "show_branch_name": true,
