@@ -90,7 +90,7 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD BREW COMPLETION
 	if type brew &>/dev/null; then
-		HOMEBREW_PREFIX="$(brew --prefix)"
+		HOMEBREW_PREFIX="$BREW_HOME"
 		if [ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]; then
 			echo -e "$CB   ··>$MB brew $RESET"
 			# This file may change location depending on OS
@@ -156,7 +156,7 @@ case "${INTERPRETER}" in
 	# LOAD BREW COMPLETION
 	if type brew &>/dev/null; then
 		echo -e "$CB   ··>$MB brew $RESET"
-		FPATH="$(brew --prefix)/share/zsh/site-functions:${FPATH}"
+		FPATH="$BREW_HOME/share/zsh/site-functions:${FPATH}"
 	fi
 	# LOAD ZSH COMPLETION
 	echo -e "$CB   ··>$MB zsh $RESET"

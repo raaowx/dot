@@ -36,14 +36,24 @@ else
 	export LC_TIME="es_ES.UTF-8"
 fi
 # DIRECTORIES - HOME
-export BREW_HOME="/opt/homebrew"
+if [[ -x "/opt/homebrew/bin/brew" ]]; then
+	export BREW_HOME="/opt/homebrew" # MacOS - Apple Silicon
+elif [[ -x "/usr/local/bin/brew" ]]; then
+	export BREW_HOME="/usr/local" # MacOS - Intel
+fi
 export GEM_SYSTEM_HOME="$HOME/.local/share/gem"
-export GEM_BREW_HOME="$BREW_HOME/lib/ruby/gems/4.0.0"
+if [[ -n "$BREW_HOME" ]]; then
+	export GEM_BREW_HOME="$BREW_HOME/lib/ruby/gems/4.0.0"
+fi
 # DIRECTORIES - ROOT (EXEC)
-export BREW_ROOT="$BREW_HOME/bin"
-export RUBY_ROOT="$BREW_HOME/opt/ruby/bin"
+if [[ -n "$BREW_HOME" ]]; then
+	export BREW_ROOT="$BREW_HOME/bin"
+	export RUBY_ROOT="$BREW_HOME/opt/ruby/bin"
+fi
 export GEM_SYSTEM_ROOT="$GEM_SYSTEM_HOME/bin"
-export GEM_BREW_ROOT="$GEM_BREW_HOME/bin"
+if [[ -n "$BREW_HOME" ]]; then
+	export GEM_BREW_ROOT="$GEM_BREW_HOME/bin"
+fi
 export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export COMPLETIONS_ROOT="$HOME/.completions"
@@ -52,9 +62,12 @@ export DOCKER_ROOT="$HOME/.docker/bin"
 # PATH
 export PATH="/usr/local/bin:$PATH"
 export PATH="/usr/local/sbin:$PATH"
-export PATH="$GEM_BREW_ROOT:$GEM_SYSTEM_ROOT:$PATH"
-export PATH="$RUBY_ROOT:$PATH"
-export PATH="$BREW_ROOT:$PATH"
+export PATH="$GEM_SYSTEM_ROOT:$PATH"
+if [[ -n "$BREW_HOME" ]]; then
+	export PATH="$GEM_BREW_ROOT:$PATH"
+	export PATH="$RUBY_ROOT:$PATH"
+	export PATH="$BREW_ROOT:$PATH"
+fi
 export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
 export PATH="$PATH:$COMPLETIONS_ROOT"
