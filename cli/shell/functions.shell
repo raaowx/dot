@@ -143,6 +143,14 @@ cleanup-app-associated-files() {
 }
 # D
 dos2nix() {
+  if [ $# -eq 0 ]; then
+    echo -e "\n$RB [ERROR] Usage: dos2nix <file>$RESET\n"
+    return 1
+  fi
+  if [ ! -f "$1" ]; then
+    echo -e "\n$RB [ERROR] File not found: $1$RESET\n"
+    return 1
+  fi
   FILE=$(basename "$1")
   NAME="${FILE%.*}"
   tr -d '\r' < "$1" > "$NAME.nix.txt"
@@ -265,27 +273,39 @@ kill-procs-on-volume() {
 # M
 # N
 nix2dos() {
+  if [ $# -eq 0 ]; then
+    echo -e "\n$RB [ERROR] Usage: nix2dos <file>$RESET\n"
+    return 1
+  fi
+  if [ ! -f "$1" ]; then
+    echo -e "\n$RB [ERROR] File not found: $1$RESET\n"
+    return 1
+  fi
   FILE=$(basename "$1")
   NAME="${FILE%.*}"
-  sed 's/$'"/\\r/" "$1" > "$NAME.dos.txt"
+  sed $'s/$/\r/' "$1" > "$NAME.dos.txt"
 }
 # O
 # P
 # Q
 # R
 reload-shell() {
+  local profile
+  case "${INTERPRETER}" in
+  # shellcheck source=../bash/profile.bash
+  "bash") profile="$HOME/.bash_profile" ;;
+  # shellcheck source=../zsh/profile.zsh
+  "zsh")  profile="$HOME/.zsh_profile"  ;;
+  esac
+  if [ ! -r "$profile" ]; then
+    echo -e "\n$RB [ERROR] Profile not found or not readable: $profile$RESET\n"
+    return 1
+  fi
   clear
   case "${INTERPRETER}" in
-  "bash")
-    # shellcheck source=../bash/profile.bash
-    source "$HOME/.bash_profile"
-    ;;
-  "zsh")
-    rm -f "${ZDOTDIR:-$HOME}/.zcompdump"*
-    # shellcheck source=../zsh/profile.zsh
-    source "$HOME/.zsh_profile"
-    ;;
+  "zsh") rm -f "${ZDOTDIR:-$HOME}/.zcompdump"* ;;
   esac
+  source "$profile"
 }
 repoinfo() {
   if git rev-parse --show-toplevel >/dev/null 2>&1; then
