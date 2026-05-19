@@ -2,7 +2,10 @@
 # === === === SHELL FUNCTIONS === === === #
 # A
 add-space-to-dock() {
-  defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'
+  if ! defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'; then
+    echo -e "\n$RB [ERROR] Could not write to Dock preferences$RESET\n"
+    return 1
+  fi
   killall Dock
   sleep 3
   open -a Dock
@@ -165,8 +168,11 @@ gitbranch() {
   printf '{ %s } ' "$branch"
 }
 gitignore() {
-  PARAM="linux,macos,windows"
-  FILE=".gitignore"
+  local API_URL="https://www.toptal.com/developers/gitignore/api"
+  local PARAM="linux,macos,windows"
+  local FILE=".gitignore"
+  local answer name
+
   if [ $# -ne 0 ]; then
     for name in "$@"; do
       PARAM="$PARAM,$name"
@@ -175,12 +181,49 @@ gitignore() {
   else
     echo -e "$WB Creating '$RB$FILE$WB' with default values:$YB $PARAM $RESET"
   fi
-  curl --connect-timeout 10 -f -s -L "toptal.com/developers/gitignore/api/$PARAM" -o "$FILE"
-  if [ ! -f "$FILE" ]; then
-    echo -e "\n$RB [ERROR] Unable to create '$FILE' file$RESET\n"
-    echo -e "$WB You can check if your parameters are valid by performing:"
-    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"toptal.com/developers/gitignore/api/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$WB <<$RESET\n"
+
+  if [ -f "$FILE" ]; then
+    echo -e "$WB ··>$YB $FILE$WB already exists.$RESET"
+    printf "  [b] Create a backup and continue\n"
+    printf "  [c] Cancel\n"
+    printf "  > "
+    read -r answer
+    echo
+    case "$answer" in
+    "b")
+      cp "$FILE" "$FILE.backup"
+      echo -e "$WB ··> Backup created:$YB $FILE.backup$RESET\n"
+      ;;
+    *)
+      echo -e "$WB ··> Cancelled$RESET\n"
+      return 0
+      ;;
+    esac
   fi
+
+  if ! curl --connect-timeout 10 -f -s -L "$API_URL/$PARAM" -o "$FILE"; then
+    echo -e "\n$RB [ERROR] Unable to fetch '$FILE' from the API$RESET\n"
+    if [ -f "$FILE.backup" ]; then
+      mv "$FILE.backup" "$FILE"
+      echo -e "$WB ··> Original '$FILE' restored from backup$RESET\n"
+    fi
+    echo -e "$WB You can check if your parameters are valid by performing:"
+    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$WB <<$RESET\n"
+    return 1
+  fi
+
+  if [ ! -f "$FILE" ] || [ ! -s "$FILE" ]; then
+    echo -e "\n$RB [ERROR] Downloaded '$FILE' is missing or empty — check your parameters$RESET\n"
+    if [ -f "$FILE.backup" ]; then
+      mv "$FILE.backup" "$FILE"
+      echo -e "$WB ··> Original '$FILE' restored from backup$RESET\n"
+    fi
+    echo -e "$WB You can check if your parameters are valid by performing:"
+    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$WB <<$RESET\n"
+    return 1
+  fi
+
+  echo -e "$WB ··>$YB $FILE$WB created successfully$RESET\n"
 }
 # H
 hosts() {
