@@ -203,12 +203,18 @@ if [ -r "$SHELL_FUNCTIONS" ]; then
 	. "$SHELL_FUNCTIONS"
 fi
 
-# LOAD NVM
+# LOAD NVM (lazy)
 if [ -r "$NVM_ROOT/nvm.sh" ]; then
-	echo -e "$CB   ··>$MB nvm $RESET"
-	# This file may change location depending on OS
-	# shellcheck disable=SC1091
-	. "$NVM_ROOT/nvm.sh"
+	echo -e "$CB   ··>$MB nvm (lazy) $RESET"
+	nvm() {
+		unset -f nvm node npm npx
+		# shellcheck disable=SC1091
+		. "$NVM_ROOT/nvm.sh"
+		nvm "$@"
+	}
+	node() { nvm use default >/dev/null 2>&1; node "$@"; }
+	npm()  { nvm use default >/dev/null 2>&1; npm  "$@"; }
+	npx()  { nvm use default >/dev/null 2>&1; npx  "$@"; }
 fi
 
 SHELL_BOX="$HOME/.shell_box"
