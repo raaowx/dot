@@ -28,7 +28,10 @@ cleanup-app-associated-files() {
 
   local app_name="$*"
   local fd_bin
-  fd_bin="$(command -v fd)"
+  fd_bin="$(command -v fd)" || {
+    echo -e "\n$RB [ERROR] fd not found$RESET\n"
+    return 1
+  }
 
   echo -e "\n$WB ··> Elevated permissions are required to search and delete protected directories.$RESET"
   sudo -v || { echo -e "\n$RB [ERROR] Authentication failed$RESET\n"; return 1; }
@@ -86,7 +89,7 @@ cleanup-app-associated-files() {
   echo -e "$WB ··> Found$YB $total$WB potential residuals ($YB${#dirs[@]}$WB directories,$YB ${#files[@]}$WB files)$RESET\n"
 
   local -a deleted_paths=()
-  local deleted_dirs=0 deleted_files=0 skipped=0
+  local deleted_dirs=0 deleted_files=0 skipped=0 failed=0
   local is_child answer
 
   for dir in "${dirs[@]}"; do
@@ -102,9 +105,13 @@ cleanup-app-associated-files() {
     read -r answer
     echo
     if [[ "$answer" == "y" ]]; then
-      sudo rm -rf "$dir"
-      deleted_paths+=("$dir")
-      deleted_dirs=$(( deleted_dirs + 1 ))
+      if sudo rm -rf "$dir"; then
+        deleted_paths+=("$dir")
+        deleted_dirs=$(( deleted_dirs + 1 ))
+      else
+        echo -e "$RB [ERROR] Could not delete: $dir$RESET"
+        failed=$(( failed + 1 ))
+      fi
     fi
   done
 
@@ -121,14 +128,18 @@ cleanup-app-associated-files() {
     read -r answer
     echo
     if [[ "$answer" == "y" ]]; then
-      sudo rm "$file"
-      deleted_paths+=("$file")
-      deleted_files=$(( deleted_files + 1 ))
+      if sudo rm "$file"; then
+        deleted_paths+=("$file")
+        deleted_files=$(( deleted_files + 1 ))
+      else
+        echo -e "$RB [ERROR] Could not delete: $file$RESET"
+        failed=$(( failed + 1 ))
+      fi
     fi
   done
 
   local total_deleted=$(( deleted_dirs + deleted_files ))
-  echo -e "$WB ··> Done.$YB $total_deleted$WB deleted ($YB$deleted_dirs$WB directories,$YB $deleted_files$WB files).$YB $skipped$WB auto-skipped$RESET\n"
+  echo -e "$WB ··> Done.$YB $total_deleted$WB deleted ($YB$deleted_dirs$WB directories,$YB $deleted_files$WB files).$YB $skipped$WB auto-skipped$YB $failed$WB failed$RESET\n"
 }
 # D
 dos2nix() {
@@ -306,7 +317,7 @@ static-webserver() {
   SWS_DIR="./"
   if ! command -v python3 > /dev/null 2>&1; then
     echo -e "\n$RB [ERROR] Python v3.X wasn't found in the OS$RESET\n"
-    exit 1
+    return 1
   fi
   if [ "$#" -gt 0 ] && [ ! -d "$1" ]; then
     echo -e "\n$RB [ERROR] The parameter '$1' is not a directory, ignoring...$RESET\n"
