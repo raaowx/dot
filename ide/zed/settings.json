@@ -184,7 +184,11 @@
     "hover_popover_enabled": true,
     "hover_popover_hiding_delay": 300,
     "hover_popover_sticky": true,
-    "icon_theme": "Colored Zed Icons Theme Dark",
+    "icon_theme": {
+        "mode": "dark",
+        "light": "Colored Zed Icons Theme Light",
+        "dark": "Colored Zed Icons Theme Dark",
+    },
     "image_viewer": {
         "unit": "decimal",
     },
@@ -402,7 +406,11 @@
         "working_directory": "current_project_directory",
     },
     "text_rendering_mode": "grayscale",
-    "theme": "Tokyo Night",
+    "theme": {
+        "mode": "dark",
+        "light": "Tokyo Night Light",
+        "dark": "Tokyo Night Moon",
+    },
     "title_bar": {
         "button_layout": "standard",
         "show_branch_name": true,
