@@ -295,7 +295,7 @@
         "sticky_scroll": true,
     },
     "proxy": "",
-    "redact_private_values": true,
+    "redact_private_values": false,
     "relative_line_numbers": "disabled",
     "remove_trailing_whitespace_on_save": true,
     "restore_on_file_reopen": true,
