@@ -39,6 +39,7 @@
       "Bash(git tag *)"
     ]
   },
+  "model": "sonnet",
   "enableAllProjectMcpServers": false,
   "disableRemoteControl": false,
   "disableSkillShellExecution": false,
@@ -47,6 +48,7 @@
   "spinnerTipsEnabled": true,
   "syntaxHighlightingDisabled": false,
   "alwaysThinkingEnabled": false,
+  "effortLevel": "medium",
   "fastModePerSessionOptIn": true,
   "awaySummaryEnabled": true,
   "showClearContextOnPlanAccept": false,
@@ -58,6 +60,5 @@
   "editorMode": "normal",
   "preferredNotifChannel": "auto",
   "showTurnDuration": true,
-  "disableDeepLinkRegistration": "disable",
-  "model": "sonnet"
+  "disableDeepLinkRegistration": "disable"
 }
