@@ -176,13 +176,10 @@ case "${INTERPRETER}" in
 	;;
 esac
 
-# LOAD NVM COMPLETION
+# LOAD NVM COMPLETION (lazy)
 NVM_COMPLETION="$COMPLETIONS_ROOT/nvm-completion.shell"
 if [ -r "$NVM_COMPLETION" ]; then
-	echo -e "$CB   ··>$MB nvm $RESET"
-	# This file may change location depending on OS
-	# shellcheck disable=SC1090
-	. "$NVM_COMPLETION"
+	echo -e "$CB   ··>$MB nvm (lazy) $RESET"
 fi
 
 echo -e "$NEWLINE"
@@ -210,6 +207,7 @@ if [ -r "$NVM_ROOT/nvm.sh" ]; then
 		unset -f nvm node npm npx
 		# shellcheck disable=SC1091
 		. "$NVM_ROOT/nvm.sh"
+		[ -r "$NVM_COMPLETION" ] && . "$NVM_COMPLETION"
 		nvm "$@"
 	}
 	node() { nvm use default >/dev/null 2>&1; node "$@"; }

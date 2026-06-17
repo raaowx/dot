@@ -45,6 +45,8 @@ export GEM_SYSTEM_HOME="$HOME/.local/share/gem"
 if [[ -n "$BREW_HOME" ]]; then
 	export GEM_BREW_HOME="$BREW_HOME/lib/ruby/gems/4.0.0"
 fi
+export NVM_HOME="$HOME/.nvm"
+export NVM_DIR="$NVM_HOME"
 # DIRECTORIES - ROOT (EXEC)
 if [[ -n "$BREW_HOME" ]]; then
 	export BREW_ROOT="$BREW_HOME/bin"
@@ -57,7 +59,9 @@ fi
 export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export COMPLETIONS_ROOT="$HOME/.completions"
-export NVM_ROOT="$HOME/.nvm"
+if [[ -n "$BREW_HOME" ]]; then
+	export NVM_ROOT="$BREW_HOME/opt/nvm"
+fi
 export DOCKER_ROOT="$HOME/.docker/bin"
 # PATH
 export PATH="/usr/local/bin:$PATH"
@@ -71,7 +75,6 @@ fi
 export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
 export PATH="$PATH:$COMPLETIONS_ROOT"
-export PATH="$PATH:$NVM_ROOT"
 export PATH="$PATH:$DOCKER_ROOT"
 # STDOUT
 export CLICOLOR=1
