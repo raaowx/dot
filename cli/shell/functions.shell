@@ -332,20 +332,15 @@ nix2dos() {
 # P
 # Q
 # R
+reload-completions() {
+    case "${INTERPRETER}" in
+    "zsh")  rm -f "${ZDOTDIR:-$HOME}/.zcompdump"* ;;
+    esac
+
+    reload-shell
+}
 reload-shell() {
   local profile
-
-  case "$1" in
-  "-h" | "--help")
-    echo -e "\n$WB Usage: reload-shell [-rc|--refresh-completions] [-h|--help]$RESET"
-    echo -e "$WB ··> Reloads the current shell profile.$RESET"
-    echo -e "$WB ··> -rc, --refresh-completions   Rebuild the zsh completion cache (.zcompdump).$RESET"
-    echo -e "$WB ··>                              Use it after installing/uninstalling a brew package$RESET"
-    echo -e "$WB ··>                              that ships its own completions.$RESET"
-    echo -e "$WB ··> -h,  --help                  Show this help.$RESET\n"
-    return 0
-    ;;
-  esac
 
   case "${INTERPRETER}" in
   # shellcheck source=../bash/profile.bash
@@ -353,23 +348,14 @@ reload-shell() {
   # shellcheck source=../zsh/profile.zsh
   "zsh")  profile="$HOME/.zsh_profile"  ;;
   esac
+
   if [ ! -r "$profile" ]; then
     echo -e "\n$RB [ERROR] Profile not found or not readable: $profile$RESET\n"
     return 1
   fi
+
   clear
-  case "$1" in
-  "-rc" | "--refresh-completions")
-    case "${INTERPRETER}" in
-    "zsh") rm -f "${ZDOTDIR:-$HOME}/.zcompdump"* ;;
-    esac
-    ;;
-  *)
-    case "${INTERPRETER}" in
-    "zsh") echo -e "$WB ··> Skipping completion refresh, use$YB -rc$WB or$YB --refresh-completions$WB to rebuild it$RESET" ;;
-    esac
-    ;;
-  esac
+
   source "$profile"
 }
 repoinfo() {
