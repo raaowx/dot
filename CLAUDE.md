@@ -71,6 +71,13 @@ Bash-specific (`cli/bash/`) and zsh-specific (`cli/zsh/`) files are exempt from 
 
 These files are the source of truth for `~/.claude/CLAUDE.md` and `~/.claude/settings.json` (global) or project-level equivalents. They are copied manually to their target locations; this repository does not symlink or install them automatically.
 
+`ai/claude/hooks/` holds the scripts referenced from the `hooks` section of both `.json` profiles, and is the source of truth for `~/.claude/hooks/`. They must be copied there with the executable bit set.
+
+Access to sensitive files is enforced in two layers, and both must be kept in sync by hand when either changes:
+
+- `permissions.deny` / `permissions.ask` in the `.json` profiles, which only cover the `Read` tool. `deny` is reserved for paths that are never source code (`.env`, `secrets/**`, `~/.ssh`, crypto material extensions); name patterns that frequently match legitimate code (`*credential*`, `*secret*`) live in `ask` instead, so files like `credentials.js` prompt rather than being blocked outright.
+- `hooks/guard-bash-read.sh`, a `PreToolUse` hook matching `Bash`, which applies the same two pattern sets to paths extracted from the command line. It exists because `permissions` does not intercept Bash, so `cat .env` would otherwise bypass the rules entirely. Its pattern lists are deliberately duplicated from the `.json` profiles rather than shared. It degrades to allowing the command when `jq` is missing or the payload is unparseable, to avoid breaking every Bash call in a session.
+
 ## Platform assumptions
 
 All configurations target macOS on Apple Silicon. Homebrew is expected at `/opt/homebrew`. Shell scripts may reference macOS-specific commands (`pbcopy`, `open`, `osascript`, `launchctl`); see [Cross-platform compatibility](#cross-platform-compatibility) for how to handle these.
