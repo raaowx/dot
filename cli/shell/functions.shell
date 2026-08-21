@@ -412,6 +412,118 @@ update_terminal_cwd() {
 }
 # V
 # W
+worktree-mk() {
+  if [ "$#" -ne 1 ]; then
+    echo -e "\n$RB [ERROR] Usage: worktree-mk <branch>$RESET\n"
+    return 1
+  fi
+
+  local common_dir
+  if ! common_dir="$(git rev-parse --git-common-dir 2>/dev/null)"; then
+    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    return 1
+  fi
+
+  local branch="$1"
+  # Checked before anything else so the reason is always the same one, no
+  # matter where HEAD happens to be.
+  case "$branch" in
+  master | master/* | main | main/* | develop | develop/* | release | release/*)
+    echo -e "\n$RB [ERROR] Refusing to create a worktree for the base branch '$branch'$RESET\n"
+    return 1
+    ;;
+  esac
+
+  # --git-common-dir, not --show-toplevel: inside a worktree the latter would
+  # return the worktree itself and the base would end up nested.
+  common_dir="$(cd "$common_dir" && pwd)"
+  local root repo base
+  root="$(dirname "$common_dir")"
+  repo="$(basename "$root")"
+  base="$(dirname "$root")/$repo-worktrees"
+  # Slashes would nest one directory per path segment.
+  local dest="$base/wt-${branch//\//-}"
+  local short="$repo-worktrees/wt-${branch//\//-}"
+
+  # Already there: this is the "pick it up tomorrow" path.
+  if [ -e "$dest" ]; then
+    if git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+      echo -e "$WB ··> Entering worktree:$YB $short$RESET"
+      cd "$dest" || return 1
+      return 0
+    fi
+    echo -e "\n$RB [ERROR] '$short' exists but it's not a valid worktree$RESET\n"
+    return 1
+  fi
+
+  # Asking git instead of parsing its stderr, which is translated.
+  local checked_out
+  checked_out="$(git worktree list --porcelain | awk -v b="refs/heads/$branch" '
+    /^worktree /  { path = substr($0, 10) }
+    /^branch /    { if (substr($0, 8) == b) { print path; exit } }
+  ')"
+  if [ -n "$checked_out" ]; then
+    # Only worktrees living under the conventional base get shortened; anything
+    # else would be misreported as being there.
+    local where="$checked_out"
+    case "$checked_out" in
+    "$root") where="$repo" ;;
+    "$base"/*) where="$repo-worktrees/${checked_out##*/}" ;;
+    esac
+    echo -e "\n$RB [ERROR] Branch '$branch' is already checked out at '$where'$RESET\n"
+    return 1
+  fi
+
+  local reuse=0
+  git show-ref --verify --quiet "refs/heads/$branch" && reuse=1
+
+  # Reusing keeps the branch as it is; creating derives from wherever HEAD is,
+  # so the branch to validate differs.
+  local target="$branch"
+  if [ "$reuse" -eq 0 ]; then
+    if ! target="$(git symbolic-ref --short HEAD 2>/dev/null)"; then
+      echo -e "\n$RB [ERROR] HEAD is detached, switch to a branch first$RESET\n"
+      return 1
+    fi
+  fi
+
+  if ! git fetch --quiet 2>/dev/null; then
+    echo -e "$YB [WARN] Could not fetch from remote, comparing against local refs$RESET"
+  fi
+
+  local upstream
+  if ! upstream="$(git rev-parse --abbrev-ref "$target@{u}" 2>/dev/null)"; then
+    echo -e "$YB [WARN] '$target' has no upstream branch$RESET"
+  else
+    local counts behind ahead
+    counts="$(git rev-list --left-right --count "$upstream...$target" 2>/dev/null)"
+    behind="${counts%%[[:space:]]*}"
+    ahead="${counts##*[[:space:]]}"
+    if [ "${behind:-0}" -gt 0 ]; then
+      local plural=""
+      [ "$behind" -ne 1 ] && plural="s"
+      echo -e "\n$RB [ERROR] '$target' is $behind commit$plural behind '$upstream', pull before continuing$RESET\n"
+      return 1
+    fi
+    if [ "${ahead:-0}" -gt 0 ]; then
+      local plural=""
+      [ "$ahead" -ne 1 ] && plural="s"
+      echo -e "$YB [WARN] '$target' is $ahead commit$plural ahead of '$upstream'$RESET"
+    fi
+  fi
+
+  if [ "$reuse" -eq 1 ]; then
+    git worktree add --quiet "$dest" "$branch" || return 1
+    echo -e "$WB ··> Worktree:$YB $short$RESET"
+    echo -e "$WB ··> Branch:$YB $branch$RESET"
+  else
+    git worktree add --quiet "$dest" -b "$branch" || return 1
+    echo -e "$WB ··> Worktree:$YB $short$RESET"
+    echo -e "$WB ··> Branch:$YB $branch$WB (new, from$YB $target$WB)$RESET"
+  fi
+
+  cd "$dest" || return 1
+}
 # X
 # Y
 # Z
