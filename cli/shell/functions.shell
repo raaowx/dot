@@ -589,6 +589,112 @@ worktree-mk() {
 
   cd "$dest" || return 1
 }
+worktree-rm() {
+  if [ "$#" -ne 1 ]; then
+    echo -e "\n$RB [ERROR] Usage: worktree-rm <branch>$RESET\n"
+    return 1
+  fi
+
+  local common_dir
+  if ! common_dir="$(git rev-parse --git-common-dir 2>/dev/null)"; then
+    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    return 1
+  fi
+
+  # --git-common-dir, not --show-toplevel: inside a worktree the latter would
+  # return the worktree itself and the base would end up nested.
+  common_dir="$(cd "$common_dir" && pwd)"
+  local root repo base
+  root="$(dirname "$common_dir")"
+  repo="$(basename "$root")"
+  base="$(dirname "$root")/$repo-worktrees"
+
+  # Removing is destructive, so it is only allowed from the main repository:
+  # a differing git dir is what tells a worktree apart from it.
+  local git_dir
+  git_dir="$(git rev-parse --absolute-git-dir 2>/dev/null)"
+  if [ -n "$git_dir" ] && [ "$git_dir" != "$common_dir" ]; then
+    local here
+    here="$(git rev-parse --show-toplevel 2>/dev/null)"
+    # Only worktrees living under the conventional base get shortened; anything
+    # else would be misreported as being there.
+    case "$here" in
+    "$base"/*) here="$repo-worktrees/${here##*/}" ;;
+    esac
+    echo -e "\n$RB [ERROR] Run this from '$repo', not from the worktree '$here'$RESET\n"
+    return 1
+  fi
+
+  local branch="$1"
+  # Slashes would nest one directory per path segment.
+  local dest="$base/wt-${branch//\//-}"
+  local short="$repo-worktrees/wt-${branch//\//-}"
+
+  if [ ! -e "$dest" ]; then
+    echo -e "\n$RB [ERROR] There's no worktree for branch '$branch'$RESET\n"
+    return 1
+  fi
+  if ! git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    echo -e "\n$RB [ERROR] '$short' exists but it's not a valid worktree$RESET\n"
+    return 1
+  fi
+
+  # Uncommitted work is never worth losing, so this one is not negotiable.
+  # The stash is deliberately not checked: it is global to the repository and
+  # cannot be reliably attributed to a single worktree.
+  if [ -n "$(git -C "$dest" status --porcelain 2>/dev/null)" ]; then
+    echo -e "\n$RB [ERROR] Worktree '$short' has uncommitted changes, commit or discard them first$RESET\n"
+    return 1
+  fi
+
+  if ! git fetch --quiet 2>/dev/null; then
+    echo -e "$YB [WARN] Could not fetch from remote, comparing against local refs$RESET"
+  fi
+
+  # Anything not pushed is lost with the branch, hence the asymmetry: ahead
+  # aborts, behind only warns because the local commits are already upstream.
+  local answer upstream
+  if ! upstream="$(git -C "$dest" rev-parse --abbrev-ref "$branch@{u}" 2>/dev/null)"; then
+    echo -e "$WB ··>$YB '$branch'$WB has no upstream branch, its commits only exist here. Remove it anyway? [y/n]$RESET"
+    printf "  > "
+    read -r answer
+    echo
+    [[ "$answer" == "y" ]] || return 1
+  else
+    local counts behind ahead plural
+    counts="$(git -C "$dest" rev-list --left-right --count "$upstream...$branch" 2>/dev/null)"
+    behind="${counts%%[[:space:]]*}"
+    ahead="${counts##*[[:space:]]}"
+    if [ "${ahead:-0}" -gt 0 ]; then
+      plural=""
+      [ "$ahead" -ne 1 ] && plural="s"
+      echo -e "\n$RB [ERROR] '$branch' is $ahead commit$plural ahead of '$upstream', push before removing$RESET\n"
+      return 1
+    fi
+    if [ "${behind:-0}" -gt 0 ]; then
+      plural=""
+      [ "$behind" -ne 1 ] && plural="s"
+      echo -e "$WB ··>$YB '$branch'$WB is $behind commit$plural behind$YB '$upstream'$WB. Remove it anyway? [y/n]$RESET"
+      printf "  > "
+      read -r answer
+      echo
+      [[ "$answer" == "y" ]] || return 1
+    fi
+  fi
+
+  git worktree remove "$dest" || return 1
+  git worktree prune
+  echo -e "$WB ··> Removed worktree:$YB $short$RESET"
+
+  # The branch outlives the worktree, so removing it is a separate decision.
+  echo -e "$WB ··> Delete the local branch$YB $branch$WB too? [y/n]$RESET"
+  printf "  > "
+  read -r answer
+  echo
+  if [[ "$answer" == "y" ]]; then
+    git branch -D "$branch" || return 1
+  fi
+}
 # X
 # Y
 # Z
