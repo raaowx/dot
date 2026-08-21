@@ -412,6 +412,71 @@ update_terminal_cwd() {
 }
 # V
 # W
+worktree-ls() {
+  if [ "$#" -ne 0 ]; then
+    echo -e "\n$RB [ERROR] Usage: worktree-ls$RESET\n"
+    return 1
+  fi
+
+  local common_dir
+  if ! common_dir="$(git rev-parse --git-common-dir 2>/dev/null)"; then
+    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    return 1
+  fi
+
+  # --git-common-dir, not --show-toplevel: inside a worktree the latter would
+  # return the worktree itself and the base would end up nested.
+  common_dir="$(cd "$common_dir" && pwd)"
+  local root repo base
+  root="$(dirname "$common_dir")"
+  repo="$(basename "$root")"
+  base="$(dirname "$root")/$repo-worktrees"
+
+  # A differing git dir is what tells a worktree apart from the main repository.
+  local git_dir
+  git_dir="$(git rev-parse --absolute-git-dir 2>/dev/null)"
+  if [ -n "$git_dir" ] && [ "$git_dir" != "$common_dir" ]; then
+    local here
+    here="$(git rev-parse --show-toplevel 2>/dev/null)"
+    # Only worktrees living under the conventional base get shortened; anything
+    # else would be misreported as being there.
+    case "$here" in
+    "$base"/*) here="$repo-worktrees/${here##*/}" ;;
+    esac
+    echo -e "$YB [WARN] Running from worktree '$here', listing the whole repository$RESET"
+  fi
+
+  # Porcelain blocks are separated by a blank line. A prunable one is worth
+  # flagging: its directory is gone, so it lists fine but cannot be entered.
+  local entries
+  entries="$(git worktree list --porcelain | awk '
+    /^worktree /  { path = substr($0, 10); branch = "(detached)"; gone = "" ; next }
+    /^branch /    { branch = substr($0, 8); sub("^refs/heads/", "", branch); next }
+    /^prunable/   { gone = " (prunable)"; next }
+    /^$/          { if (path != "") { print path "\t" branch gone; path = "" } }
+    END           { if (path != "") { print path "\t" branch gone } }
+  ')"
+
+  # The first entry is always the main repository.
+  local main_entry
+  main_entry="$(printf '%s\n' "$entries" | head -n 1)"
+  echo -e "$WB ··> Repository:$YB $repo$WB →$YB ${main_entry#*	}$RESET"
+
+  echo -e "$WB ··> Worktrees:$RESET"
+  printf '%s\n' "$entries" | tail -n +2 | while IFS="$(printf '\t')" read -r path branch; do
+    case "$path" in
+    "$base"/*) printf '     %s → %s\n' "${path##*/}" "$branch" ;;
+    esac
+  done | sort
+
+  echo -e "$WB ··> External:$RESET"
+  printf '%s\n' "$entries" | tail -n +2 | while IFS="$(printf '\t')" read -r path branch; do
+    case "$path" in
+    "$base"/*) ;;
+    *) printf '     %s → %s\n' "$path" "$branch" ;;
+    esac
+  done | sort
+}
 worktree-mk() {
   if [ "$#" -ne 1 ]; then
     echo -e "\n$RB [ERROR] Usage: worktree-mk <branch>$RESET\n"
