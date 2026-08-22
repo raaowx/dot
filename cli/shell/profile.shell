@@ -28,17 +28,24 @@ case "${INTERPRETER}" in
 	;;
 esac
 # PROMPT
+# Colours follow the message convention: structure in blue, values in cyan,
+# paths in magenta, status in green/red. Zsh keeps the numeric %F{n} codes
+# instead of the palette variables: raw escapes would need %{...%} wrapping
+# for zsh to compute the prompt width, and getting that wrong corrupts the
+# prompt. Correspondence: 9↔RB, 10↔GB, 12↔AB, 13↔MB, 14↔CB, 15↔WB.
 case "${INTERPRETER}" in
 "bash")
-	export PS1='\[$W\][\D{%a %d.%m.%Y} - \t] ~ \[$Y\]\!\[$W\] ~ \[$RB\]#\#\n\[$WB\]··> \[$WB\]\h\[$WB\] { \j } <·· \[$W\][\[$CB\]\u\[$W\]] \[$MB\]\W\[$RESET\] \[$B\]$(gitbranch)\[$RESET\]\$ '
-	export PS2='\[$R\]··>\[$RESET\] '
-	export PROMPT_COMMAND="history -a; history -n; $PROMPT_COMMAND"
+	# $? must be captured first, before anything else overwrites it
+	export PROMPT_COMMAND='__exit=$?; history -a; history -n'
+	__status() { [ "${__exit:-0}" -eq 0 ] && printf '\001%b\002√' "$GB" || printf '\001%b\002%s' "$RB" "$__exit"; }
+	export PS1='\[$AB\][\D{%a %d.%m.%Y} - \t]\[$AB\] ~ \[$CB\]\!\[$AB\] ~ \[$CB\]#\#\n\[$AB\]··> \[$CB\]\h\[$AB\] { \[$CB\]\j\[$AB\] } <·· [\[$CB\]\u\[$AB\]] \[$MB\]\W\[$AB\] \[$CB\]$(gitbranch)\[$AB\]$(__status)\[$RESET\]\$ '
+	export PS2='\[$AB\]··>\[$RESET\] '
 	;;
 "zsh")
-	export PS1='%F{7}[%D{%a %d.%m.%Y - %H:%M:%S}]$NEWLINE%F{15}··> %F{15}%m%F{15} { %j } <·· %F{7}[%F{14}%n%F{7}] %F{13}%1~%f %F{0}$(gitbranch)%f%# '
-	export RPS1='%F{3}%!%F{7} ~ %(?.%F{10}√%f.%F{9}%?%f)'
-	export PS2='%F{1}··>%f '
-	export RPS2='%F{1}<··%f'
+	export PS1='%F{12}[%D{%a %d.%m.%Y - %H:%M:%S}]$NEWLINE%F{12}··> %F{14}%m%F{12} { %F{14}%j%F{12} } <·· [%F{14}%n%F{12}] %F{13}%1~%F{12} %F{14}$(gitbranch)%f%# '
+	export RPS1='%F{14}%!%F{12} ~ %(?.%F{10}√%f.%F{9}%?%f)'
+	export PS2='%F{12}··>%f '
+	export RPS2='%F{12}<··%f'
 	;;
 esac
 # HISTORY
