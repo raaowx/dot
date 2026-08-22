@@ -154,7 +154,7 @@ Editor-based commits (`git commit` without -m or -F) cannot be inspected before 
 Please use:
   git commit -m "[TAG] Description"
 
-See CLAUDE.md > "Commit message convention" for details.
+See the 'commit-msg' skill for details.
 EOF
   exit 2
 fi
@@ -192,7 +192,7 @@ Issue:        $issue
 EOF
   print_allowed_tags
   echo "" >&2
-  echo "See CLAUDE.md > \"Commit message convention\" for details." >&2
+  echo "See the 'commit-msg' skill for details." >&2
   exit 2
 }
 

@@ -42,9 +42,12 @@ The shell config has a deliberate sourcing chain. Understanding it is required t
                │           (sets Homebrew path, locale, ANSI colors, tool paths)
                ├── sources cli/shell/profile.shell
                │     (zsh options, prompts, history, NVM lazy-load, completions)
+               ├── sources cli/shell/messages.shell  (message emitters)
                ├── sources cli/shell/aliases.shell
                └── sources cli/shell/functions.shell  (utility functions)
 ```
+
+`messages.shell` is sourced by `profile.shell` immediately after `variables.shell` and **before any output is produced**. That ordering is deliberate: the startup prints its own messages long before `functions.shell` is loaded, so the emitters cannot live there.
 
 `cli/bash/` mirrors the same chain for bash. The `cli/shell/` layer is shell-agnostic and sourced by both.
 
@@ -54,6 +57,12 @@ These conventions apply to all files under `cli/shell/` (`aliases.shell`, `funct
 
 - **Alphabetical order**, enforced by single-letter section comments (A, B, C, …). When adding a new entry, place it in its corresponding letter section and respect the alphabetical sort within that section.
 - **Kebab-case for multi-word identifiers**: `add-space-to-dock`, `kill-procs-on-volume`, `static-webserver`. Never `addSpaceToDock` or `add_space_to_dock`.
+
+### Message output
+
+All user-facing output from `cli/` follows a single convention: the colour marks the level, the body is read in white, errors and warnings go to stderr, and the emitters in `cli/shell/messages.shell` (`shell-error`, `shell-warn`, `shell-ok`, `shell-info`) are used instead of hand-written `echo -e`.
+
+The full rules — colour taxonomy, contrast ratios, prompt shapes and startup format — live in the `shell-output` skill (`.claude/skills/shell-output/SKILL.md`).
 
 ### Cross-platform compatibility
 
@@ -81,3 +90,5 @@ Access to sensitive files is enforced in two layers, and both must be kept in sy
 ## Platform assumptions
 
 All configurations target macOS on Apple Silicon. Homebrew is expected at `/opt/homebrew`. Shell scripts may reference macOS-specific commands (`pbcopy`, `open`, `osascript`, `launchctl`); see [Cross-platform compatibility](#cross-platform-compatibility) for how to handle these.
+
+The Terminal.app profile in `terminal/macos/macos.terminal` overrides five ANSI bright slots so that every colour used by the shell layer meets WCAG AA against its background. Those slots are shared with `git`, `grep`, `ls` and compilers, so changing them affects more than the shell; the ratios and rationale are documented in the `shell-output` skill.
