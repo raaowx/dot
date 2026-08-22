@@ -69,8 +69,10 @@ matches_any() {
     shift
     local pattern
     for pattern in "$@"; do
+        # Glob matching is intentional: patterns are globs, not literals
         # shellcheck disable=SC2053
         [[ "$token" == $pattern ]] && return 0
+        # shellcheck disable=SC2053
         [[ "${token##*/}" == $pattern ]] && return 0
     done
     return 1
