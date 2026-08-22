@@ -3,7 +3,7 @@
 # A
 add-space-to-dock() {
   if ! defaults write com.apple.dock persistent-apps -array-add '{"tile-type"="spacer-tile";}'; then
-    echo -e "\n$RB [ERROR] Could not write to Dock preferences$RESET\n"
+    shell-error "Could not write to Dock preferences"
     return 1
   fi
   killall Dock
@@ -25,19 +25,19 @@ cleanup-history() {
 }
 cleanup-app-associated-files() {
   if [ $# -eq 0 ]; then
-    echo -e "\n$RB [ERROR] Usage: cleanup-app-associated-files <app_name>$RESET\n"
+    shell-error "Usage: cleanup-app-associated-files <app_name>"
     return 1
   fi
 
   local app_name="$*"
   local fd_bin
   fd_bin="$(command -v fd)" || {
-    echo -e "\n$RB [ERROR] fd not found$RESET\n"
+    shell-error "fd not found"
     return 1
   }
 
-  echo -e "\n$WB ··> Elevated permissions are required to search and delete protected directories.$RESET"
-  sudo -v || { echo -e "\n$RB [ERROR] Authentication failed$RESET\n"; return 1; }
+  shell-info "Elevated permissions are required to search and delete protected directories"
+  sudo -v || { shell-error "Authentication failed"; return 1; }
 
   # Directories excluded from the search — add or remove entries as needed
   local -a excluded_dirs=(
@@ -60,7 +60,7 @@ cleanup-app-associated-files() {
   local pattern
   pattern=$(printf '%s' "$app_name" | tr '[:upper:]' '[:lower:]' | sed 's/ /.*/g')
 
-  echo -e "$WB ··> Searching for residuals of '$YB$app_name$WB'...$RESET"
+  echo -e "$WB ··> Searching for residuals of$CB $app_name$WB...$RESET"
 
   # Two fd passes: directories first (sorted shallow to deep), then files
   local -a dirs=() files=()
@@ -85,11 +85,11 @@ cleanup-app-associated-files() {
   local total=$(( ${#dirs[@]} + ${#files[@]} ))
 
   if [ "$total" -eq 0 ]; then
-    echo -e "$WB ··> No residuals found for '$YB$app_name$WB'$RESET\n"
+    echo -e "$WB ··> No residuals found for$CB $app_name$RESET\n"
     return 0
   fi
 
-  echo -e "$WB ··> Found$YB $total$WB potential residuals ($YB${#dirs[@]}$WB directories,$YB ${#files[@]}$WB files)$RESET\n"
+  echo -e "$WB ··> Found$CB $total$WB potential residuals ($CB${#dirs[@]}$WB directories,$CB ${#files[@]}$WB files)$RESET\n"
 
   local -a deleted_paths=()
   local deleted_dirs=0 deleted_files=0 skipped=0 failed=0
@@ -103,8 +103,9 @@ cleanup-app-associated-files() {
     done
     [ "$is_child" -eq 1 ] && { skipped=$(( skipped + 1 )); continue; }
 
-    echo -e "$WB ··>$YB [DIR]$WB  $dir$RESET"
-    printf "  Delete? [y/n]: "
+    echo -e "$WB ··>$MB [DIR]$WB  $MB$dir$RESET"
+    echo -e "$WB ··> Delete it? [y/n]$RESET"
+    printf "  > "
     read -r answer
     echo
     if [[ "$answer" == "y" ]]; then
@@ -112,7 +113,7 @@ cleanup-app-associated-files() {
         deleted_paths+=("$dir")
         deleted_dirs=$(( deleted_dirs + 1 ))
       else
-        echo -e "$RB [ERROR] Could not delete: $dir$RESET"
+        echo -e "$RB [ERROR] $WB Could not delete:$MB $dir$RESET"
         failed=$(( failed + 1 ))
       fi
     fi
@@ -126,8 +127,9 @@ cleanup-app-associated-files() {
     done
     [ "$is_child" -eq 1 ] && { skipped=$(( skipped + 1 )); continue; }
 
-    echo -e "$WB ··>$YB [FILE]$WB $file$RESET"
-    printf "  Delete? [y/n]: "
+    echo -e "$WB ··>$MB [FILE]$WB $MB$file$RESET"
+    echo -e "$WB ··> Delete it? [y/n]$RESET"
+    printf "  > "
     read -r answer
     echo
     if [[ "$answer" == "y" ]]; then
@@ -135,23 +137,23 @@ cleanup-app-associated-files() {
         deleted_paths+=("$file")
         deleted_files=$(( deleted_files + 1 ))
       else
-        echo -e "$RB [ERROR] Could not delete: $file$RESET"
+        echo -e "$RB [ERROR] $WB Could not delete:$MB $file$RESET"
         failed=$(( failed + 1 ))
       fi
     fi
   done
 
   local total_deleted=$(( deleted_dirs + deleted_files ))
-  echo -e "$WB ··> Done.$YB $total_deleted$WB deleted ($YB$deleted_dirs$WB directories,$YB $deleted_files$WB files).$YB $skipped$WB auto-skipped$YB $failed$WB failed$RESET\n"
+  shell-ok "$CB$total_deleted$WB deleted ($CB$deleted_dirs$WB directories,$CB $deleted_files$WB files).$CB $skipped$WB auto-skipped,$CB $failed$WB failed"
 }
 # D
 dos2nix() {
   if [ $# -eq 0 ]; then
-    echo -e "\n$RB [ERROR] Usage: dos2nix <file>$RESET\n"
+    shell-error "Usage: dos2nix <file>"
     return 1
   fi
   if [ ! -f "$1" ]; then
-    echo -e "\n$RB [ERROR] File not found: $1$RESET\n"
+    shell-error "File not found: $1"
     return 1
   fi
   FILE=$(basename "$1")
@@ -177,53 +179,53 @@ gitignore() {
     for name in "$@"; do
       PARAM="$PARAM,$name"
     done
-    echo -e "$WB Creating '$RB$FILE$WB' with provided values:$YB $PARAM $RESET"
+    echo -e "$WB ··> Creating$MB $FILE$WB with provided values:$CB $PARAM$RESET"
   else
-    echo -e "$WB Creating '$RB$FILE$WB' with default values:$YB $PARAM $RESET"
+    echo -e "$WB ··> Creating$MB $FILE$WB with default values:$CB $PARAM$RESET"
   fi
 
   if [ -f "$FILE" ]; then
-    echo -e "$WB ··>$YB $FILE$WB already exists.$RESET"
-    printf "  [b] Create a backup and continue\n"
-    printf "  [c] Cancel\n"
+    echo -e "$WB ··>$MB $FILE$WB already exists$RESET"
+    printf "     [b] Create a backup and continue\n"
+    printf "     [c] Cancel\n"
     printf "  > "
     read -r answer
     echo
     case "$answer" in
     "b")
       cp "$FILE" "$FILE.backup"
-      echo -e "$WB ··> Backup created:$YB $FILE.backup$RESET\n"
+      echo -e "$WB ··> Backup created:$MB $FILE.backup$RESET\n"
       ;;
     *)
-      echo -e "$WB ··> Cancelled$RESET\n"
+      shell-info "Cancelled"
       return 0
       ;;
     esac
   fi
 
   if ! curl --connect-timeout 10 -f -s -L "$API_URL/$PARAM" -o "$FILE"; then
-    echo -e "\n$RB [ERROR] Unable to fetch '$FILE' from the API$RESET\n"
+    shell-error "Unable to fetch$MB $FILE$WB from the API"
     if [ -f "$FILE.backup" ]; then
       mv "$FILE.backup" "$FILE"
-      echo -e "$WB ··> Original '$FILE' restored from backup$RESET\n"
+      echo -e "$WB ··> Original$MB $FILE$WB restored from backup$RESET\n"
     fi
-    echo -e "$WB You can check if your parameters are valid by performing:"
-    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$WB <<$RESET\n"
+    echo -e "$WB ··> You can check if your parameters are valid by performing:$RESET" >&2
+    echo -e "$CB     curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$RESET\n" >&2
     return 1
   fi
 
   if [ ! -f "$FILE" ] || [ ! -s "$FILE" ]; then
-    echo -e "\n$RB [ERROR] Downloaded '$FILE' is missing or empty — check your parameters$RESET\n"
+    shell-error "Downloaded$MB $FILE$WB is missing or empty — check your parameters"
     if [ -f "$FILE.backup" ]; then
       mv "$FILE.backup" "$FILE"
-      echo -e "$WB ··> Original '$FILE' restored from backup$RESET\n"
+      echo -e "$WB ··> Original$MB $FILE$WB restored from backup$RESET\n"
     fi
-    echo -e "$WB You can check if your parameters are valid by performing:"
-    echo -e "\t>>$YB curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$WB <<$RESET\n"
+    echo -e "$WB ··> You can check if your parameters are valid by performing:$RESET" >&2
+    echo -e "$CB     curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$RESET\n" >&2
     return 1
   fi
 
-  echo -e "$WB ··>$YB $FILE$WB created successfully$RESET\n"
+  shell-ok "$MB$FILE$WB created successfully"
 }
 # H
 hosts() {
@@ -243,12 +245,12 @@ kill-procs-on-volume() {
   user_name="$(whoami)"
 
   if [[ -z "$vol_path" ]]; then
-    echo -e "\n$RB [ERROR] Usage:$MB kill_procs_on_volume /path/to/volume$RESET\n"
+    shell-error "Usage: kill-procs-on-volume$MB /path/to/volume"
     return 1
   fi
 
   if [[ ! -d "$vol_path" ]]; then
-    echo -e "\n$RB [ERROR] Path not found:$MB \"$vol_path\"$RESET\n"
+    shell-error "Path not found:$MB $vol_path"
     return 1
   fi
 
@@ -260,7 +262,7 @@ kill-procs-on-volume() {
   proc_names=()
   pids=()
 
-  sudo -v || { echo -e "\n$RB [ERROR] Authentication failed$RESET\n"; return 1; }
+  sudo -v || { shell-error "Authentication failed"; return 1; }
 
   while IFS=$'\t' read -r proc pid; do
     [[ -n "$proc" && "$pid" =~ ^[0-9]+$ ]] || continue
@@ -272,23 +274,24 @@ kill-procs-on-volume() {
       | sort -u
   )
 
-  echo -e "$WB ··> User:$YB $user_name$RESET"
-  echo -e "$WB ··> Volume:$YB $vol_label$RESET"
-  echo -e "$WB ··> Volume path:$YB $vol_path$RESET"
+  echo -e "$WB ··> User:$CB $user_name$RESET"
+  echo -e "$WB ··> Volume:$CB $vol_label$RESET"
+  echo -e "$WB ··> Volume path:$MB $vol_path$RESET"
 
   if (( ${#pids[@]} == 0 )); then
-    echo -e "$WB ··> Active processes:$RB none$RESET"
+    echo -e "$WB ··> Active processes:$CB none$RESET"
     echo
     return 0
   fi
 
-  echo -e "$WB ··> Active processes:$RESET"
+  shell-info "Active processes:"
   for proc in "${proc_names[@]}"; do
     echo -e "  $WB -$RESET $proc"
   done
   echo
 
-  echo -e "$WB ··>$YB $vol_label$WB has been analyzed. The following processes are still active. Do you want to terminate them gracefully? [y/n]$RESET"
+  echo -e "$WB ··>$CB $vol_label$WB has been analyzed. The following processes are still active.$RESET"
+  echo -e "$WB ··> Terminate them gracefully? [y/n]$RESET"
   printf "  > "
   read -r answer
 
@@ -302,13 +305,13 @@ kill-procs-on-volume() {
     done
 
     if [[ "$killed_any" -eq 1 ]]; then
-      echo -e "$WB ··>$MB SIGTERM$WB sent to the listed processes.$RESET"
+      echo -e "$WB ··>$CB SIGTERM$WB sent to the listed processes$RESET"
     else
-      echo -e "$RB [ERROR] No processes could be terminated (permission denied or already gone).$RESET"
+      echo -e "$RB [ERROR] $WB No processes could be terminated (permission denied or already gone)$RESET"
     fi
     echo
   else
-    echo -e "$WB ··> No processes were terminated.$RESET"
+    shell-info "No processes were terminated"
     echo
   fi
 }
@@ -317,11 +320,11 @@ kill-procs-on-volume() {
 # N
 nix2dos() {
   if [ $# -eq 0 ]; then
-    echo -e "\n$RB [ERROR] Usage: nix2dos <file>$RESET\n"
+    shell-error "Usage: nix2dos <file>"
     return 1
   fi
   if [ ! -f "$1" ]; then
-    echo -e "\n$RB [ERROR] File not found: $1$RESET\n"
+    shell-error "File not found: $1"
     return 1
   fi
   FILE=$(basename "$1")
@@ -343,55 +346,55 @@ reload-shell() {
   local profile
 
   case "${INTERPRETER}" in
-  # shellcheck source=../bash/profile.bash
   "bash") profile="$HOME/.bash_profile" ;;
-  # shellcheck source=../zsh/profile.zsh
   "zsh")  profile="$HOME/.zsh_profile"  ;;
   esac
 
   if [ ! -r "$profile" ]; then
-    echo -e "\n$RB [ERROR] Profile not found or not readable: $profile$RESET\n"
+    shell-error "Profile not found or not readable: $profile"
     return 1
   fi
 
   clear
 
+  # Path resolved at runtime from the interpreter in use
+  # shellcheck disable=SC1090
   source "$profile"
 }
 repoinfo() {
   if git rev-parse --show-toplevel >/dev/null 2>&1; then
-    echo -e "$WB ··> Name:$YB $(basename "$(pwd)")$RESET"
-    echo -e "$WB ··> Branch:$YB $(gitbranch)$RESET"
+    echo -e "$WB ··> Name:$CB $(basename "$(pwd)")$RESET"
+    echo -e "$WB ··> Branch:$CB $(gitbranch)$RESET"
     REGEX='^[0-9]+$'
     if [[ $# -eq 0 ]]; then
-      echo -e "$WB ··> Last 7 commits:$RESET"
+      shell-info "Last 7 commits:"
       git log -n 7 --oneline
     elif [[ $# -eq 1 ]] && [[ $1 =~ $REGEX ]] && [[ $1 -gt 0 ]]; then
-      echo -e "$WB ··> Last $1 commits:$RESET"
+      shell-info "Last $1 commits:"
       git log -n "$1" --oneline
     else
-      echo -e "\n$RB [ERROR] Remember to use only one positive integer as parameter$RESET\n"
-      echo -e "$WB ··> Last 3 commits:$RESET"
+      shell-error "Remember to use only one positive integer as parameter"
+      shell-info "Last 3 commits:"
       git log -n 3 --oneline
     fi
-    echo -e "$WB ··> Stashed changes:$RESET"
+    shell-info "Stashed changes:"
     git stash list
-    echo -e "$WB ··> Current changes:$RESET"
+    shell-info "Current changes:"
     git status -s
     echo
   else
-    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    shell-error "There's no repository here"
   fi
 }
 # S
 static-webserver() {
   SWS_DIR="./"
   if ! command -v python3 > /dev/null 2>&1; then
-    echo -e "\n$RB [ERROR] Python v3.X wasn't found in the OS$RESET\n"
+    shell-error "Python v3.X wasn't found in the OS"
     return 1
   fi
   if [ "$#" -gt 0 ] && [ ! -d "$1" ]; then
-    echo -e "\n$RB [ERROR] The parameter '$1' is not a directory, ignoring...$RESET\n"
+    shell-error "The parameter '$1' is not a directory, ignoring..."
   elif [ -d "$1" ]; then
     SWS_DIR="$1"
   fi
@@ -414,13 +417,13 @@ update_terminal_cwd() {
 # W
 worktree-ls() {
   if [ "$#" -ne 0 ]; then
-    echo -e "\n$RB [ERROR] Usage: worktree-ls$RESET\n"
+    shell-error "Usage: worktree-ls"
     return 1
   fi
 
   local common_dir
   if ! common_dir="$(git rev-parse --git-common-dir 2>/dev/null)"; then
-    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    shell-error "There's no repository here"
     return 1
   fi
 
@@ -443,7 +446,7 @@ worktree-ls() {
     case "$here" in
     "$base"/*) here="$repo-worktrees/${here##*/}" ;;
     esac
-    echo -e "$YB [WARN] Running from worktree '$here', listing the whole repository$RESET"
+    shell-warn "Running from worktree$MB $here$WB, listing the whole repository"
   fi
 
   # Porcelain blocks are separated by a blank line. A prunable one is worth
@@ -460,16 +463,16 @@ worktree-ls() {
   # The first entry is always the main repository.
   local main_entry
   main_entry="$(printf '%s\n' "$entries" | head -n 1)"
-  echo -e "$WB ··> Repository:$YB $repo$WB →$YB ${main_entry#*	}$RESET"
+  echo -e "$WB ··> Repository:$CB $repo$WB →$MB ${main_entry#*	}$RESET"
 
-  echo -e "$WB ··> Worktrees:$RESET"
+  shell-info "Worktrees:"
   printf '%s\n' "$entries" | tail -n +2 | while IFS="$(printf '\t')" read -r path branch; do
     case "$path" in
     "$base"/*) printf '     %s → %s\n' "${path##*/}" "$branch" ;;
     esac
   done | sort
 
-  echo -e "$WB ··> External:$RESET"
+  shell-info "External:"
   printf '%s\n' "$entries" | tail -n +2 | while IFS="$(printf '\t')" read -r path branch; do
     case "$path" in
     "$base"/*) ;;
@@ -479,13 +482,13 @@ worktree-ls() {
 }
 worktree-mk() {
   if [ "$#" -ne 1 ]; then
-    echo -e "\n$RB [ERROR] Usage: worktree-mk <branch>$RESET\n"
+    shell-error "Usage: worktree-mk <branch>"
     return 1
   fi
 
   local common_dir
   if ! common_dir="$(git rev-parse --git-common-dir 2>/dev/null)"; then
-    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    shell-error "There's no repository here"
     return 1
   fi
 
@@ -494,7 +497,7 @@ worktree-mk() {
   # matter where HEAD happens to be.
   case "$branch" in
   master | master/* | main | main/* | develop | develop/* | release | release/*)
-    echo -e "\n$RB [ERROR] Refusing to create a worktree for the base branch '$branch'$RESET\n"
+    shell-error "Refusing to create a worktree for the base branch$CB $branch"
     return 1
     ;;
   esac
@@ -513,11 +516,11 @@ worktree-mk() {
   # Already there: this is the "pick it up tomorrow" path.
   if [ -e "$dest" ]; then
     if git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-      echo -e "$WB ··> Entering worktree:$YB $short$RESET"
+      echo -e "$WB ··> Entering worktree:$MB $short$RESET"
       cd "$dest" || return 1
       return 0
     fi
-    echo -e "\n$RB [ERROR] '$short' exists but it's not a valid worktree$RESET\n"
+    shell-error "$MB$short$WB exists but it's not a valid worktree"
     return 1
   fi
 
@@ -535,7 +538,7 @@ worktree-mk() {
     "$root") where="$repo" ;;
     "$base"/*) where="$repo-worktrees/${checked_out##*/}" ;;
     esac
-    echo -e "\n$RB [ERROR] Branch '$branch' is already checked out at '$where'$RESET\n"
+    shell-error "Branch$CB $branch$WB is already checked out at$MB $where"
     return 1
   fi
 
@@ -547,18 +550,18 @@ worktree-mk() {
   local target="$branch"
   if [ "$reuse" -eq 0 ]; then
     if ! target="$(git symbolic-ref --short HEAD 2>/dev/null)"; then
-      echo -e "\n$RB [ERROR] HEAD is detached, switch to a branch first$RESET\n"
+      shell-error "HEAD is detached, switch to a branch first"
       return 1
     fi
   fi
 
   if ! git fetch --quiet 2>/dev/null; then
-    echo -e "$YB [WARN] Could not fetch from remote, comparing against local refs$RESET"
+    shell-warn "Could not fetch from remote, comparing against local refs"
   fi
 
   local upstream
   if ! upstream="$(git rev-parse --abbrev-ref "$target@{u}" 2>/dev/null)"; then
-    echo -e "$YB [WARN] '$target' has no upstream branch$RESET"
+    shell-warn "$CB$target$WB has no upstream branch"
   else
     local counts behind ahead
     counts="$(git rev-list --left-right --count "$upstream...$target" 2>/dev/null)"
@@ -567,37 +570,37 @@ worktree-mk() {
     if [ "${behind:-0}" -gt 0 ]; then
       local plural=""
       [ "$behind" -ne 1 ] && plural="s"
-      echo -e "\n$RB [ERROR] '$target' is $behind commit$plural behind '$upstream', pull before continuing$RESET\n"
+      shell-error "$CB$target$WB is$CB $behind$WB commit$plural behind$CB $upstream$WB, pull before continuing"
       return 1
     fi
     if [ "${ahead:-0}" -gt 0 ]; then
       local plural=""
       [ "$ahead" -ne 1 ] && plural="s"
-      echo -e "$YB [WARN] '$target' is $ahead commit$plural ahead of '$upstream'$RESET"
+      shell-warn "$CB$target$WB is$CB $ahead$WB commit$plural ahead of$CB $upstream"
     fi
   fi
 
   if [ "$reuse" -eq 1 ]; then
     git worktree add --quiet "$dest" "$branch" || return 1
-    echo -e "$WB ··> Worktree:$YB $short$RESET"
-    echo -e "$WB ··> Branch:$YB $branch$RESET"
+    echo -e "$WB ··> Worktree:$MB $short$RESET"
+    echo -e "$WB ··> Branch:$CB $branch$RESET"
   else
     git worktree add --quiet "$dest" -b "$branch" || return 1
-    echo -e "$WB ··> Worktree:$YB $short$RESET"
-    echo -e "$WB ··> Branch:$YB $branch$WB (new, from$YB $target$WB)$RESET"
+    echo -e "$WB ··> Worktree:$MB $short$RESET"
+    echo -e "$WB ··> Branch:$CB $branch$WB (new, from$CB $target$WB)$RESET"
   fi
 
   cd "$dest" || return 1
 }
 worktree-rm() {
   if [ "$#" -ne 1 ]; then
-    echo -e "\n$RB [ERROR] Usage: worktree-rm <branch>$RESET\n"
+    shell-error "Usage: worktree-rm <branch>"
     return 1
   fi
 
   local common_dir
   if ! common_dir="$(git rev-parse --git-common-dir 2>/dev/null)"; then
-    echo -e "\n$RB [ERROR] There's no repository here$RESET\n"
+    shell-error "There's no repository here"
     return 1
   fi
 
@@ -621,7 +624,7 @@ worktree-rm() {
     case "$here" in
     "$base"/*) here="$repo-worktrees/${here##*/}" ;;
     esac
-    echo -e "\n$RB [ERROR] Run this from '$repo', not from the worktree '$here'$RESET\n"
+    shell-error "Run this from$CB $repo$WB, not from the worktree$MB $here"
     return 1
   fi
 
@@ -631,11 +634,11 @@ worktree-rm() {
   local short="$repo-worktrees/wt-${branch//\//-}"
 
   if [ ! -e "$dest" ]; then
-    echo -e "\n$RB [ERROR] There's no worktree for branch '$branch'$RESET\n"
+    shell-error "There's no worktree for branch$CB $branch"
     return 1
   fi
   if ! git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-    echo -e "\n$RB [ERROR] '$short' exists but it's not a valid worktree$RESET\n"
+    shell-error "$MB$short$WB exists but it's not a valid worktree"
     return 1
   fi
 
@@ -643,19 +646,20 @@ worktree-rm() {
   # The stash is deliberately not checked: it is global to the repository and
   # cannot be reliably attributed to a single worktree.
   if [ -n "$(git -C "$dest" status --porcelain 2>/dev/null)" ]; then
-    echo -e "\n$RB [ERROR] Worktree '$short' has uncommitted changes, commit or discard them first$RESET\n"
+    shell-error "Worktree$MB $short$WB has uncommitted changes, commit or discard them first"
     return 1
   fi
 
   if ! git fetch --quiet 2>/dev/null; then
-    echo -e "$YB [WARN] Could not fetch from remote, comparing against local refs$RESET"
+    shell-warn "Could not fetch from remote, comparing against local refs"
   fi
 
   # Anything not pushed is lost with the branch, hence the asymmetry: ahead
   # aborts, behind only warns because the local commits are already upstream.
   local answer upstream
   if ! upstream="$(git -C "$dest" rev-parse --abbrev-ref "$branch@{u}" 2>/dev/null)"; then
-    echo -e "$WB ··>$YB '$branch'$WB has no upstream branch, its commits only exist here. Remove it anyway? [y/n]$RESET"
+    echo -e "$WB ··>$CB $branch$WB has no upstream branch, its commits only exist here.$RESET"
+    echo -e "$WB ··> Remove it anyway? [y/n]$RESET"
     printf "  > "
     read -r answer
     echo
@@ -668,13 +672,14 @@ worktree-rm() {
     if [ "${ahead:-0}" -gt 0 ]; then
       plural=""
       [ "$ahead" -ne 1 ] && plural="s"
-      echo -e "\n$RB [ERROR] '$branch' is $ahead commit$plural ahead of '$upstream', push before removing$RESET\n"
+      shell-error "$CB$branch$WB is$CB $ahead$WB commit$plural ahead of$CB $upstream$WB, push before removing"
       return 1
     fi
     if [ "${behind:-0}" -gt 0 ]; then
       plural=""
       [ "$behind" -ne 1 ] && plural="s"
-      echo -e "$WB ··>$YB '$branch'$WB is $behind commit$plural behind$YB '$upstream'$WB. Remove it anyway? [y/n]$RESET"
+      echo -e "$WB ··>$CB $branch$WB is$CB $behind$WB commit$plural behind$CB $upstream$RESET"
+      echo -e "$WB ··> Remove it anyway? [y/n]$RESET"
       printf "  > "
       read -r answer
       echo
@@ -684,10 +689,10 @@ worktree-rm() {
 
   git worktree remove "$dest" || return 1
   git worktree prune
-  echo -e "$WB ··> Removed worktree:$YB $short$RESET"
+  shell-ok "Removed worktree:$MB $short"
 
   # The branch outlives the worktree, so removing it is a separate decision.
-  echo -e "$WB ··> Delete the local branch$YB $branch$WB too? [y/n]$RESET"
+  echo -e "$WB ··> Delete the local branch$CB $branch$WB too? [y/n]$RESET"
   printf "  > "
   read -r answer
   echo

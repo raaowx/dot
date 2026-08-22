@@ -1,0 +1,22 @@
+# shellcheck shell=bash
+# === === === SHELL MESSAGES === === === #
+# Emitters for every user-facing message in the shell layer.
+#
+# They live in their own file, sourced right after the colour palette and
+# before any output is produced, because profile.shell prints its startup
+# messages long before functions.shell is loaded: defining them there would
+# leave the whole startup without emitters.
+#
+# The colour marks the level, the text is read in white. See the
+# 'shell-output' skill for the full convention.
+#
+# Errors and warnings go to stderr so that redirecting stdout does not
+# swallow them.
+# E
+shell-error() { echo -e "\n$RB [ERROR] $WB$*$RESET\n" >&2; }
+# I
+shell-info() { echo -e "$WB ··> $*$RESET"; }
+# O
+shell-ok() { echo -e "$GB [OK] $WB$*$RESET"; }
+# W
+shell-warn() { echo -e "$YB [WARN] $WB$*$RESET" >&2; }

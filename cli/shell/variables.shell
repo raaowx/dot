@@ -6,8 +6,8 @@ if [[ -n "$ZSH_VERSION" ]]; then
 elif [[ -n "$BASH_VERSION" ]]; then
 	INTERPRETER="bash"
 fi
-declare INTERPRETER_VERSION
-declare NEWLINE
+# No bare 'declare' here: in zsh it prints already-set variables to stdout,
+# polluting the startup. The exports below are the actual declaration.
 case "${INTERPRETER}" in
 "bash")
 	export INTERPRETER_VERSION=$BASH_VERSION

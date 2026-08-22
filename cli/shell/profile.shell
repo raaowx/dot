@@ -3,8 +3,15 @@
 # VARIABLES
 SHELL_VARIABLES="$HOME/.shell_variables"
 if [ -r "$SHELL_VARIABLES" ]; then
-	# shellcheck source=./functions.shell
+	# shellcheck source=./variables.shell
 	. "$SHELL_VARIABLES"
+fi
+# MESSAGES
+# Sourced before any output is produced, so the startup can use the emitters
+SHELL_MESSAGES="$HOME/.shell_messages"
+if [ -r "$SHELL_MESSAGES" ]; then
+	# shellcheck source=./messages.shell
+	. "$SHELL_MESSAGES"
 fi
 # CONFIGURATION
 case "${INTERPRETER}" in
@@ -50,16 +57,16 @@ case "${INTERPRETER}" in
 esac
 
 # === WELCOME === #
-echo -e "\n $CB ··> Hi $USER! Welcome to $INTERPRETER $INTERPRETER_VERSION <·· $RESET\n"
+echo -e "\n$CB Hi $USER! Welcome to $INTERPRETER $INTERPRETER_VERSION$RESET\n"
 
 # === LOAD FILES === #
-echo -e "$CB Loading completion: $RESET"
+shell-info "Loading completion:"
 case "${INTERPRETER}" in
 "bash")
 	# LOAD BASH COMPLETION
 	BASH_COMPLETION="$COMPLETIONS_ROOT/completion.bash"
 	if [ -r "$BASH_COMPLETION" ]; then
-		echo -e "$CB   ··>$MB bash $RESET"
+		echo -e "$WB   ·$CB bash$RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
 		. "$BASH_COMPLETION"
@@ -67,7 +74,7 @@ case "${INTERPRETER}" in
 	# LOAD GIT COMPLETION
 	GIT_COMPLETION="$COMPLETIONS_ROOT/git-completion.bash"
 	if [ -r "$GIT_COMPLETION" ]; then
-		echo -e "$CB   ··>$MB git $RESET"
+		echo -e "$WB   ·$CB git$RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
 		. "$GIT_COMPLETION"
@@ -75,7 +82,7 @@ case "${INTERPRETER}" in
 	# LOAD DOCKER COMPLETION
 	DOCKER_COMPLETION="$COMPLETIONS_ROOT/docker-completion.bash"
 	if [ -r "$DOCKER_COMPLETION" ]; then
-		echo -e "$CB   ··>$MB docker $RESET"
+		echo -e "$WB   ·$CB docker$RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
 		. "$DOCKER_COMPLETION"
@@ -83,7 +90,7 @@ case "${INTERPRETER}" in
 	# LOAD DOCKER COMPOSE COMPLETION
 	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.bash"
 	if [ -r "$DOCKER_COMPOSE_COMPLETION" ]; then
-		echo -e "$CB   ··>$MB docker-compose $RESET"
+		echo -e "$WB   ·$CB docker-compose$RESET"
 		# This file may change location depending on OS
 		# shellcheck disable=SC1090
 		. "$DOCKER_COMPOSE_COMPLETION"
@@ -92,14 +99,16 @@ case "${INTERPRETER}" in
 	if type brew &>/dev/null; then
 		HOMEBREW_PREFIX="$BREW_HOME"
 		if [ -r "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh" ]; then
-			echo -e "$CB   ··>$MB brew $RESET"
+			echo -e "$WB   ·$CB brew$RESET"
 			# This file may change location depending on OS
 			# shellcheck disable=SC1091
 			. "${HOMEBREW_PREFIX}/etc/profile.d/bash_completion.sh"
 		else
+			# The message goes outside the loop: it would otherwise be
+			# printed once per completion file
+			echo -e "$WB   ·$CB brew$RESET"
 			for COMPLETION in "${HOMEBREW_PREFIX}/etc/bash_completion.d/"*; do
 				if [ -r "${COMPLETION}" ]; then
-					echo -e "$CB   ··>$MB brew $RESET"
 					# This file may change location depending on OS
 					# shellcheck disable=SC1090
 					. "${COMPLETION}"
@@ -110,7 +119,7 @@ case "${INTERPRETER}" in
 	;;
 "zsh")
 	# LOAD COMPLETION STYLES
-	echo -e "$CB   ··>$MB completion styles $RESET"
+	echo -e "$WB   ·$CB completion styles$RESET"
 	zstyle ':completion:*' completer _expand _complete _ignored _approximate
 	# Shellcheck doesn't support linting over ZSH instructions
 	# https://github.com/koalaman/shellcheck/issues/809
@@ -128,7 +137,7 @@ case "${INTERPRETER}" in
 	GIT_COMPLETION_ZSH="$COMPLETIONS_ROOT/git-completion.zsh"
 	GIT_COMPLETION_BASH="$COMPLETIONS_ROOT/git-completion.bash"
 	if [ -r "$GIT_COMPLETION_ZSH" ] && [ -r "$GIT_COMPLETION_BASH" ]; then
-		echo -e "$CB   ··>$MB git $RESET"
+		echo -e "$WB   ·$CB git$RESET"
 		zstyle ':completion:*:*:git:*' script "$GIT_COMPLETION_BASH"
 		# Shellcheck doesn't support linting over ZSH instructions
 		# https://github.com/koalaman/shellcheck/issues/809
@@ -138,7 +147,7 @@ case "${INTERPRETER}" in
 	# LOAD DOCKER COMPLETION
 	DOCKER_COMPLETION="$COMPLETIONS_ROOT/docker-completion.zsh"
 	if [ -r "$DOCKER_COMPLETION" ]; then
-		echo -e "$CB   ··>$MB docker $RESET"
+		echo -e "$WB   ·$CB docker$RESET"
 		# Shellcheck doesn't support linting over ZSH instructions
 		# https://github.com/koalaman/shellcheck/issues/809
 		# shellcheck disable=SC2128,SC2206
@@ -147,7 +156,7 @@ case "${INTERPRETER}" in
 	# LOAD DOCKER COMPOSE COMPLETION
 	DOCKER_COMPOSE_COMPLETION="$COMPLETIONS_ROOT/docker-compose-completion.zsh"
 	if [ -r "$DOCKER_COMPOSE_COMPLETION" ]; then
-		echo -e "$CB   ··>$MB docker-compose $RESET"
+		echo -e "$WB   ·$CB docker-compose$RESET"
 		# Shellcheck doesn't support linting over ZSH instructions
 		# https://github.com/koalaman/shellcheck/issues/809
 		# shellcheck disable=SC2128,SC2206
@@ -155,21 +164,26 @@ case "${INTERPRETER}" in
 	fi
 	# LOAD BREW COMPLETION
 	if type brew &>/dev/null; then
-		echo -e "$CB   ··>$MB brew $RESET"
+		echo -e "$WB   ·$CB brew$RESET"
 		FPATH="$BREW_HOME/share/zsh/site-functions:${FPATH}"
 	fi
 	# LOAD ZSH COMPLETION
-	echo -e "$CB   ··>$MB zsh $RESET"
+	echo -e "$WB   ·$CB zsh$RESET"
 	autoload -Uz compinit
+	# Shellcheck doesn't support linting over ZSH instructions
+	# https://github.com/koalaman/shellcheck/issues/809
 	if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+12) ]]; then
 		compinit
 	else
 		compinit -C
+		# Shellcheck doesn't support linting over ZSH instructions
+		# https://github.com/koalaman/shellcheck/issues/809
+		# shellcheck disable=SC2168
 		local _insecure
 		_insecure=$(compaudit 2>/dev/null)
 		if [[ -n "$_insecure" ]]; then
-			echo "compinit: insecure files/directories:"
-			echo "$_insecure"
+			shell-warn "compinit found insecure files or directories:"
+			echo "$_insecure" >&2
 		fi
 	fi
 	autoload bashcompinit && bashcompinit
@@ -177,36 +191,37 @@ case "${INTERPRETER}" in
 esac
 
 # LOAD NVM COMPLETION (lazy)
+# Only the path is resolved here; the completion is sourced by the lazy stub
+# below, which is where 'nvm (lazy)' is reported
 NVM_COMPLETION="$COMPLETIONS_ROOT/nvm-completion.shell"
-if [ -r "$NVM_COMPLETION" ]; then
-	echo -e "$CB   ··>$MB nvm (lazy) $RESET"
-fi
 
-echo -e "$NEWLINE"
-echo -e "$CB Loading scripts: $RESET"
+echo
+shell-info "Loading scripts:"
 
 # LOAD FILES
 SHELL_ALIASES="$HOME/.shell_aliases"
 if [ -r "$SHELL_ALIASES" ]; then
-	echo -e "$CB   ··>$MB aliases $RESET"
+	echo -e "$WB   ·$CB aliases$RESET"
 	# shellcheck source=./aliases.shell
 	. "$SHELL_ALIASES"
 fi
 
 SHELL_FUNCTIONS="$HOME/.shell_functions"
 if [ -r "$SHELL_FUNCTIONS" ]; then
-	echo -e "$CB   ··>$MB functions $RESET"
+	echo -e "$WB   ·$CB functions$RESET"
 	# shellcheck source=./functions.shell
 	. "$SHELL_FUNCTIONS"
 fi
 
 # LOAD NVM (lazy)
 if [ -r "$NVM_ROOT/nvm.sh" ]; then
-	echo -e "$CB   ··>$MB nvm (lazy) $RESET"
+	echo -e "$WB   ·$CB nvm (lazy)$RESET"
 	nvm() {
 		unset -f nvm node npm npx
 		# shellcheck disable=SC1091
 		. "$NVM_ROOT/nvm.sh"
+		# Path resolved at runtime from COMPLETIONS_ROOT
+		# shellcheck disable=SC1090
 		[ -r "$NVM_COMPLETION" ] && . "$NVM_COMPLETION"
 		nvm "$@"
 	}
@@ -217,8 +232,8 @@ fi
 
 SHELL_BOX="$HOME/.shell_box"
 if [ -r "$SHELL_BOX" ]; then
-	echo -e "$NEWLINE"
-	echo -e "$CB Loading box: $RESET"
+	echo
+	shell-info "Loading box:"
 	# This file may not exists
 	# shellcheck disable=SC1090
 	. "$SHELL_BOX"
@@ -226,14 +241,14 @@ fi
 
 SHELL_JOB="$HOME/.shell_job"
 if [ -r "$SHELL_JOB" ]; then
-	echo -e "$NEWLINE"
-	echo -e "$CB Loading job: $RESET"
+	echo
+	shell-info "Loading job:"
 	# This file may not exists
 	# shellcheck disable=SC1090
 	. "$SHELL_JOB"
 fi
 
-echo -e "\n $CB ··> All tools were loaded, enjoy your shell <·· $RESET\n"
+echo -e "\n$CB All tools were loaded, enjoy your shell$RESET\n"
 
 # LOAD SHELL INIT
 SHELL_INIT="$HOME/.shell_init"
