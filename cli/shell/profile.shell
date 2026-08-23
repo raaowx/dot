@@ -64,7 +64,7 @@ case "${INTERPRETER}" in
 esac
 
 # === WELCOME === #
-echo -e "\n$CB Hi $USER! Welcome to $INTERPRETER $INTERPRETER_VERSION$RESET\n"
+shell-info "Hi $USER! Welcome to $INTERPRETER $INTERPRETER_VERSION\n"
 
 # === LOAD FILES === #
 shell-info "Loading completion:"
@@ -255,7 +255,8 @@ if [ -r "$SHELL_JOB" ]; then
 	. "$SHELL_JOB"
 fi
 
-echo -e "\n$CB All tools were loaded, enjoy your shell$RESET\n"
+echo
+shell-info "All tools were loaded, enjoy your shell\n"
 
 # LOAD SHELL INIT
 SHELL_INIT="$HOME/.shell_init"
