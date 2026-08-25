@@ -93,7 +93,7 @@
     "feedbackSurveyRate": 0,
     "spinnerTipsEnabled": true,
     "syntaxHighlightingDisabled": false,
-    "alwaysThinkingEnabled": false,
+    "alwaysThinkingEnabled": true,
     "effortLevel": "medium",
     "fastModePerSessionOptIn": true,
     "awaySummaryEnabled": true,
