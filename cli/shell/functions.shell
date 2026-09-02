@@ -210,7 +210,7 @@ gitignore() {
       echo -e "$WB ··> Original$MB $FILE$WB restored from backup$RESET\n"
     fi
     echo -e "$WB ··> You can check if your parameters are valid by performing:$RESET" >&2
-    echo -e "$CB     curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$RESET\n" >&2
+    echo -e "$AB     curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$RESET\n" >&2
     return 1
   fi
 
@@ -221,7 +221,7 @@ gitignore() {
       echo -e "$WB ··> Original$MB $FILE$WB restored from backup$RESET\n"
     fi
     echo -e "$WB ··> You can check if your parameters are valid by performing:$RESET" >&2
-    echo -e "$CB     curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$RESET\n" >&2
+    echo -e "$AB     curl --connect-timeout 10 -f -s -L \"$API_URL/list\" | grep -oE \"[^,]*PARAMETER[^,]*\"$RESET\n" >&2
     return 1
   fi
 
@@ -513,11 +513,24 @@ worktree-mk() {
   local dest="$base/wt-${branch//\//-}"
   local short="$repo-worktrees/wt-${branch//\//-}"
 
-  # Already there: this is the "pick it up tomorrow" path.
+  # Absolute so the command works from any window; a literal $HOME keeps it
+  # short and still expands when pasted.
+  local hint="$dest"
+  case "$dest" in
+  "$HOME"/*) hint="\$HOME${dest#"$HOME"}" ;;
+  esac
+
+  # Already there: this is the "pick it up tomorrow" path. No cd either, so the
+  # function never moves the current window, whether it creates or re-enters.
   if [ -e "$dest" ]; then
     if git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
-      echo -e "$WB ··> Entering worktree:$MB $short$RESET"
-      cd "$dest" || return 1
+      # Read from the worktree instead of echoing the argument: sanitising / to
+      # - makes two different branches land on the same directory.
+      local existing
+      existing="$(git -C "$dest" symbolic-ref --short HEAD 2>/dev/null)" || existing="(detached)"
+      echo -e "$WB ··> Worktree already exists:$MB $short$RESET"
+      echo -e "$WB ··> Branch:$CB $existing$RESET"
+      echo -e "$WB ··> Enter it with:$AB cd \"$hint\"$RESET"
       return 0
     fi
     shell-error "$MB$short$WB exists but it's not a valid worktree"
@@ -590,7 +603,7 @@ worktree-mk() {
     echo -e "$WB ··> Branch:$CB $branch$WB (new, from$CB $target$WB)$RESET"
   fi
 
-  cd "$dest" || return 1
+  echo -e "$WB ··> Enter it with:$AB cd \"$hint\"$RESET"
 }
 worktree-rm() {
   if [ "$#" -ne 1 ]; then
