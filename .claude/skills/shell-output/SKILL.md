@@ -49,12 +49,14 @@ Measured against the terminal background `#393939`. All eight pass WCAG AA 4.5:1
 | `$YB` yellow  | `#EAEC23` | 9.09 | `[WARN]` tag                             |
 | `$CB` cyan    | `#00E5E5` | 7.34 | Emphasised values, startup items         |
 | `$GB` green   | `#31E722` | 6.92 | `[OK]` tag, prompt success status        |
-| `$AB` blue    | `#A894FF` | 4.59 | Prompt structure                         |
+| `$AB` blue    | `#A894FF` | 4.59 | Prompt structure, suggested commands     |
 | `$RB` red     | `#FD7C6B` | 4.55 | `[ERROR]` tag, prompt error status       |
 | `$MB` magenta | `#E970FF` | 4.52 | Paths and file names                     |
 | `$BB` grey    | `#A0A2A2` | 4.50 | Muted secondary text                     |
 
-**Values vs paths.** Inside a message body, use `$CB` for values (branches, counters, names, hosts) and `$MB` for anything that is a filesystem path or file name. `[DIR]` and `[FILE]` tags are path labels and therefore `$MB`.
+**Values, paths and commands.** Inside a message body, use `$CB` for values (branches, counters, names, hosts) and `$MB` for anything that is a filesystem path or file name. `[DIR]` and `[FILE]` tags are path labels and therefore `$MB`.
+
+A **suggested command** — one the user is meant to copy and run — goes entirely in `$AB`, including any path it contains: the copyable unit weighs more than its parts, and a single colour is what makes it recognisable as one. `$AB` is used because it is the only colour with no other role inside a message body, so the command stands apart from the values and paths on the surrounding lines.
 
 **Muted text.** `$BB` is for secondary detail that accompanies another message — never for information the user must read to understand what happened.
 
@@ -122,6 +124,8 @@ Banner in `$CB` with no glyph, header via `shell-info`, items with `·` in `$CB`
 
 `PS1`/`PS2`/`RPS1` follow the same taxonomy: structure in `$AB`, values in `$CB`, working directory in `$MB`, exit status in `$GB`/`$RB`.
 
+`$AB` therefore carries two roles — prompt structure and suggested commands — and the context tells them apart: one only ever appears in a prompt, the other only inside a message body. Neither can be mistaken for the other on screen.
+
 Zsh keeps the numeric `%F{n}` codes instead of the palette variables: raw escape sequences would need `%{...%}` wrapping for zsh to compute the prompt width, and getting that wrong corrupts the prompt. Correspondence: 9↔`$RB`, 10↔`$GB`, 12↔`$AB`, 13↔`$MB`, 14↔`$CB`, 15↔`$WB`.
 
 In bash, `$?` must be captured as the **first** element of `PROMPT_COMMAND`, before anything else overwrites it.
@@ -140,5 +144,6 @@ shell-info "Loading scripts:"
 
 echo -e "$WB ··> Repository:$CB $repo$WB →$MB ${main_entry#*	}$RESET"
 echo -e "$WB ··>$MB [DIR]$WB  $MB$dir$RESET"
+echo -e "$WB ··> Enter it with:$AB cd \"$hint\"$RESET"
 echo -e "$WB   ·$CB git$RESET"
 ```
