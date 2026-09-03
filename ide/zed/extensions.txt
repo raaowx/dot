@@ -2,4 +2,3 @@ colored-zed-icons-theme
 git-firefly
 html
 swift
-tokyo-night
