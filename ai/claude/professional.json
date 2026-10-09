@@ -43,6 +43,7 @@
     },
     "includeGitInstructions": true,
     "permissions": {
+        "defaultMode": "plan",
         "deny": [
             "Bash(git filter-branch *)",
             "Bash(git filter-repo *)",
