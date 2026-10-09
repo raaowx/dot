@@ -3,3 +3,4 @@ git-firefly
 html
 package-swift-lsp
 swift
+ruby
