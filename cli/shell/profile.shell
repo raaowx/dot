@@ -177,22 +177,10 @@ case "${INTERPRETER}" in
 	# LOAD ZSH COMPLETION
 	echo -e "$WB   ·$CB zsh$RESET"
 	autoload -Uz compinit
-	# Shellcheck doesn't support linting over ZSH instructions
-	# https://github.com/koalaman/shellcheck/issues/809
-	if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(#qN.mh+12) ]]; then
-		compinit
-	else
-		compinit -C
-		# Shellcheck doesn't support linting over ZSH instructions
-		# https://github.com/koalaman/shellcheck/issues/809
-		# shellcheck disable=SC2168
-		local _insecure
-		_insecure=$(compaudit 2>/dev/null)
-		if [[ -n "$_insecure" ]]; then
-			shell-warn "compinit found insecure files or directories:"
-			echo "$_insecure" >&2
-		fi
-	fi
+	# No '-C' cache: it only saves ~20 ms by skipping the compaudit security
+	# check. Zsh-only syntax (e.g. glob qualifiers) must stay out of this case:
+	# bash parses the whole statement and aborts the profile on it
+	compinit
 	autoload bashcompinit && bashcompinit
 	;;
 esac
