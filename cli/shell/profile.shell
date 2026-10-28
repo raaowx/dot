@@ -197,10 +197,13 @@ case "${INTERPRETER}" in
 	;;
 esac
 
-# LOAD NVM COMPLETION (lazy)
-# Only the path is resolved here; the completion is sourced by the lazy stub
-# below, which is where 'nvm (lazy)' is reported
+# LOAD NVM COMPLETION
+# Reported here but sourced after nvm.sh below: the completion returns early
+# when the nvm function is not defined yet
 NVM_COMPLETION="$COMPLETIONS_ROOT/nvm-completion.shell"
+if [ -r "$NVM_COMPLETION" ] && [ -r "$NVM_ROOT/nvm.sh" ]; then
+	echo -e "$WB   ·$CB nvm$RESET"
+fi
 
 echo
 shell-info "Loading scripts:"
@@ -220,21 +223,43 @@ if [ -r "$SHELL_FUNCTIONS" ]; then
 	. "$SHELL_FUNCTIONS"
 fi
 
-# LOAD NVM (lazy)
+# LOAD NVM
+# --no-use: variables.shell already put the default version in PATH, and
+# letting nvm.sh activate it again costs ~330 ms. Only when that failed does
+# nvm resolve the default alias itself; the reason is reported at the end
+NVM_WARNING=""
+NODE_VERSION=""
 if [ -r "$NVM_ROOT/nvm.sh" ]; then
-	echo -e "$WB   ·$CB nvm (lazy)$RESET"
-	nvm() {
-		unset -f nvm node npm npx
-		# shellcheck disable=SC1091
-		. "$NVM_ROOT/nvm.sh"
-		# Path resolved at runtime from COMPLETIONS_ROOT
-		# shellcheck disable=SC1090
-		[ -r "$NVM_COMPLETION" ] && . "$NVM_COMPLETION"
-		nvm "$@"
-	}
-	node() { nvm use default >/dev/null 2>&1; node "$@"; }
-	npm()  { nvm use default >/dev/null 2>&1; npm  "$@"; }
-	npx()  { nvm use default >/dev/null 2>&1; npx  "$@"; }
+	# This file may change location depending on OS
+	# shellcheck disable=SC1091
+	. "$NVM_ROOT/nvm.sh" --no-use
+	# This file may change location depending on OS
+	# shellcheck disable=SC1090
+	[ -r "$NVM_COMPLETION" ] && . "$NVM_COMPLETION"
+	if [ -z "$NODE_ROOT" ]; then
+		if [ "$NVM_DEFAULT_ALIAS" != "system" ] && nvm use --silent default >/dev/null 2>&1; then
+			NODE_VERSION="$(node --version)"
+			# nvm resolved an alias that was already exact, or one that could
+			# not be read by hand: its layout no longer matches variables.shell
+			if [ -z "$NVM_DEFAULT_ALIAS" ] || [ "v${NVM_DEFAULT_ALIAS#v}" = "$NODE_VERSION" ]; then
+				NVM_WARNING="layout"
+			else
+				NVM_WARNING="partial"
+			fi
+		else
+			NVM_WARNING="not-installed"
+		fi
+	fi
+elif [ -n "$(command ls -A "$NVM_HOME/versions/node" 2>/dev/null)" ]; then
+	NVM_WARNING="nvm-missing"
+fi
+# node is reported apart from nvm: variables.shell puts it in PATH even
+# when nvm is not installed
+if [ -n "$NODE_ROOT" ] || [ -n "$NODE_VERSION" ]; then
+	echo -e "$WB   ·$CB node$RESET"
+fi
+if [ -r "$NVM_ROOT/nvm.sh" ]; then
+	echo -e "$WB   ·$CB nvm$RESET"
 fi
 
 SHELL_BOX="$HOME/.shell_box"
@@ -257,6 +282,35 @@ fi
 
 echo
 shell-info "All tools were loaded, enjoy your shell\n"
+
+# NVM WARNINGS
+# Reported last, right above the prompt, so they are not lost in the startup
+case "$NVM_WARNING" in
+"partial")
+	shell-warn "Slower startup, the nvm default alias is partial:$CB $NVM_DEFAULT_ALIAS"
+	echo -e "$WB ··> Fix it with:$AB nvm alias default ${NODE_VERSION#v}$RESET\n"
+	;;
+"layout")
+	shell-warn "Slower startup, nvm has changed how it works and the shell startup files need to be updated"
+	echo
+	;;
+"not-installed")
+	shell-warn "The version referenced by the nvm default alias is not installed:$CB ${NVM_DEFAULT_ALIAS:-none}"
+	NVM_LATEST="$(command ls "$NVM_HOME/versions/node" 2>/dev/null | sort -V | tail -n 1)"
+	if [ -n "$NVM_LATEST" ]; then
+		NVM_FIX="nvm alias default ${NVM_LATEST#v}"
+	elif [ -n "$NVM_DEFAULT_ALIAS" ] && [ "$NVM_DEFAULT_ALIAS" != "system" ]; then
+		NVM_FIX="nvm install $NVM_DEFAULT_ALIAS"
+	else
+		NVM_FIX="nvm install --lts"
+	fi
+	echo -e "$WB ··> Fix it with:$AB $NVM_FIX$RESET\n"
+	;;
+"nvm-missing")
+	shell-warn "nvm is not installed, but node versions installed by nvm remain"
+	echo
+	;;
+esac
 
 # LOAD SHELL INIT
 SHELL_INIT="$HOME/.shell_init"

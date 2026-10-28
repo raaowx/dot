@@ -59,8 +59,22 @@ fi
 export APPLICATIONS_ROOT="$HOME/.applications"
 export SCRIPTS_ROOT="$HOME/.scripts"
 export COMPLETIONS_ROOT="$HOME/.completions"
-if [[ -n "$BREW_HOME" ]]; then
+# nvm from Homebrew when available, otherwise the script install in NVM_HOME
+if [[ -n "$BREW_HOME" ]] && [[ -r "$BREW_HOME/opt/nvm/nvm.sh" ]]; then
 	export NVM_ROOT="$BREW_HOME/opt/nvm"
+else
+	export NVM_ROOT="$NVM_HOME"
+fi
+# The nvm default version is resolved by hand because asking nvm costs
+# ~550 ms. Only an alias naming an installed version exactly (24.19.0,
+# v24.19.0) is resolved; anything else leaves NODE_ROOT unset and
+# profile.shell lets nvm resolve it
+unset NODE_ROOT NVM_DEFAULT_ALIAS
+if [[ -r "$NVM_HOME/alias/default" ]]; then
+	read -r NVM_DEFAULT_ALIAS <"$NVM_HOME/alias/default"
+	if [[ -x "$NVM_HOME/versions/node/v${NVM_DEFAULT_ALIAS#v}/bin/node" ]]; then
+		export NODE_ROOT="$NVM_HOME/versions/node/v${NVM_DEFAULT_ALIAS#v}/bin"
+	fi
 fi
 export DOCKER_ROOT="$HOME/.docker/bin"
 # PATH
@@ -71,6 +85,9 @@ if [[ -n "$BREW_HOME" ]]; then
 	export PATH="$GEM_BREW_ROOT:$PATH"
 	export PATH="$RUBY_ROOT:$PATH"
 	export PATH="$BREW_ROOT:$PATH"
+fi
+if [[ -n "$NODE_ROOT" ]]; then
+	export PATH="$NODE_ROOT:$PATH"
 fi
 export PATH="$PATH:$APPLICATIONS_ROOT"
 export PATH="$PATH:$SCRIPTS_ROOT"
