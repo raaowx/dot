@@ -39,9 +39,9 @@ The shell config has a deliberate sourcing chain. Understanding it is required t
 ~/.zshrc  →  cli/zsh/rc.zsh
                ├── sources cli/shell/init.shell
                │     └── sources cli/shell/variables.shell
-               │           (sets Homebrew path, locale, ANSI colors, tool paths)
+               │           (sets Homebrew path, locale, ANSI colors, tool paths, nvm default node)
                ├── sources cli/shell/profile.shell
-               │     (zsh options, prompts, history, NVM lazy-load, completions)
+               │     (zsh options, prompts, history, NVM load, completions)
                ├── sources cli/shell/messages.shell  (message emitters)
                ├── sources cli/shell/aliases.shell
                └── sources cli/shell/functions.shell  (utility functions)
